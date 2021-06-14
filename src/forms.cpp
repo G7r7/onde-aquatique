@@ -15,8 +15,10 @@ void Form::render()
     // Point of view for rendering
     // Common for all Forms
     Point org = anim.getPos();
-    glTranslated(org.x, org.y, org.z);
     glColor3f(col.r, col.g, col.b);
+    glTranslated(org.x, org.y, org.z);
+    glRotated(getAnim().getPhi(), 1, 0, 0);
+    glRotated(getAnim().getTheta(), 0, 1, 0);
 }
 
 
@@ -59,6 +61,17 @@ Cube_face::Cube_face(Vector v1, Vector v2, Point org, double l, double w, Color 
 void Cube_face::update(double delta_t)
 {
     // Complete this part
+    double currentPhi = anim.getPhi();
+    anim.setPhi(currentPhi + 1);
+
+
+    double currentTheta = anim.getTheta();
+    anim.setTheta(currentTheta + 1);
+
+    Point currentPos = anim.getPos();
+    currentPos.x += 0.001;
+    anim.setPos(currentPos);
+
 }
 
 
