@@ -124,17 +124,34 @@ void Surface::render()
 
 ///// Sampling fault tolerance tolerance
 
-    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 5.0);
-    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
+    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 50);
+    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_OUTLINE_POLYGON);
 
 // ************************ Called in the drawing function ********** **************** /
-    GLfloat ctrlpoints[6][5][3] = {
-    {{-3,0,0}, {-1,1,0}, {0,0,0}, {1,-1,0}, {3,0,0}},
-    {{-3,0,-1},{-1,1,-1},{0,0,-1},{1,-1,-1},{3,0,-1}},
-    {{-3,0,-3},{-1,1,-3},{0,0,-3},{1,1,-3},{3,0,-3}},
-    {{-3,1,-3},{-1,1,-3},{0,0,-3},{1,-1,-3},{3,0,-3}},
-    {{-3,0,-4},{-1,1,-4},{0,0,-4},{1,-1,-4},{3,0,-4}},
-    {{-3,2,-5},{-1,1,-5},{0,0,-5},{1,-1,-5},{3,1,-5}} };
+//    GLfloat ctrlpoints[6][5][3] = {
+//    {{-3,0,0}, {-1,0,0}, {0,0,0}, {1,0,0}, {3,0,0}},
+//    {{-3,0,-1},{-1,0,-1},{0,0,-1},{1,0,-1},{3,0,-1}},
+//    {{-3,0,-2},{-1,0,-2},{0,-20,-2},{1,0,-2},{3,0,-2}},
+//    {{-3,0,-3},{-1,0,-3},{0,0,-3},{1,0,-3},{3,0,-3}},
+//    {{-3,0,-4},{-1,0,-4},{0,0,-4},{1,0,-4},{3,0,-4}},
+//    {{-3,0,-5},{-1,0,-5},{0,0,-5},{1,0,-5},{3,0,-5}} };
+
+    int i = 6;
+    int j = 5;
+
+    GLfloat ctrlpoints[i][j][3];
+
+    GLfloat d = 0;
+    for (int a = 0; a < i; a++) {
+        GLfloat c = 0;
+        for (int b = 0; b < j; b++) {
+            ctrlpoints[a][b][0] = c;
+            ctrlpoints[a][b][1] = 0;
+            ctrlpoints[a][b][2] = d;
+            c++;
+        }
+        d++;
+    }
 
 // influence parameter setting of each control point
     GLfloat knots1[12] = { 0.0, 0.0, 0.0, 0.0,0.0,0.0,
