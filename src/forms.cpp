@@ -38,11 +38,10 @@ void Sphere::update(double delta_t)
 void Sphere::render()
 {
     GLUquadric *quad;
-
     quad = gluNewQuadric();
-
-    // Complete this part
-
+    gluQuadricTexture(quad, 0);
+    gluSphere(quad, radius, 100, 100);
+    Form::render();
     gluDeleteQuadric(quad);
 }
 
@@ -94,4 +93,58 @@ void Cube_face::render()
         glVertex3d(p4.x, p4.y, p4.z);
     }
     glEnd();
+}
+
+Surface::Surface(Vector v1, Vector v2, Point org, double l, double w, Color cl)
+{
+    vdir1 = 1.0 / v1.norm() * v1;
+    vdir2 = 1.0 / v2.norm() * v2;
+    anim.setPos(org);
+    length = l;
+    width = w;
+    col = cl;
+}
+
+
+void Surface::update(double delta_t)
+{
+}
+
+
+void Surface::render()
+{
+// Turn on the automatic method vector switch
+    glEnable(GL_AUTO_NORMAL);
+// Allow regularization vector
+    glEnable(GL_NORMALIZE);
+    GLUnurbsObj *theNurb;
+    theNurb = gluNewNurbsRenderer(); // Create a NURBS surface object
+
+// Modify the properties of NURBS surface objects-glu library function
+
+///// Sampling fault tolerance tolerance
+
+    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 5.0);
+    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
+
+// ************************ Called in the drawing function ********** **************** /
+    GLfloat ctrlpoints[6][5][3] = {
+    {{-3,0,0}, {-1,1,0}, {0,0,0}, {1,-1,0}, {3,0,0}},
+    {{-3,0,-1},{-1,1,-1},{0,0,-1},{1,-1,-1},{3,0,-1}},
+    {{-3,0,-3},{-1,1,-3},{0,0,-3},{1,1,-3},{3,0,-3}},
+    {{-3,1,-3},{-1,1,-3},{0,0,-3},{1,-1,-3},{3,0,-3}},
+    {{-3,0,-4},{-1,1,-4},{0,0,-4},{1,-1,-4},{3,0,-4}},
+    {{-3,2,-5},{-1,1,-5},{0,0,-5},{1,-1,-5},{3,1,-5}} };
+
+// influence parameter setting of each control point
+    GLfloat knots1[12] = { 0.0, 0.0, 0.0, 0.0,0.0,0.0,
+1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; // Control vector of NURBS surface
+    GLfloat knots2[10] = { 0.0, 0.0, 0.0, 0.0,0.0,
+1.0, 1.0, 1.0, 1.0, 1.0}; // Control vector of NURBS surface
+
+    gluBeginSurface(theNurb); // Start surface drawing
+    gluNurbsSurface(theNurb, 12, knots1, 10, knots2, 5 * 3, 3, & ctrlpoints [0] [0] [0], 6, 5, GL_MAP2_VERTEX_3); // Define the surface Mathematical model to determine its shape
+    Form::render();
+    gluEndSurface(theNurb); // End surface drawing
+
 }

@@ -299,9 +299,19 @@ int main(int argc, char* args[])
 //        forms_list[number_of_forms] = pFace6;
 //        number_of_forms++;
 
-        Cube_face *pFace = NULL;
-        pFace = new Cube_face(Vector(1,0,0), Vector(0,1,0), Point(0.5, 0, 0.5), 1, 1, ORANGE);
-        forms_list[number_of_forms] = pFace;
+        // Cube_face *pFace = NULL;
+        // pFace = new Cube_face(Vector(1,0,0), Vector(0,1,0), Point(0.5, 0, 0.5), 1, 1, ORANGE);
+        // forms_list[number_of_forms] = pFace;
+        // number_of_forms++;
+
+//        Sphere *pSphere1 = NULL;
+//        pSphere1 = new Sphere(1, BLUE);
+//        forms_list[number_of_forms] = pSphere1;
+//        number_of_forms++;
+
+        Surface *pSurface = NULL;
+        pSurface = new Surface(Vector(-1,0,0), Vector(0,-1,0), Point(0.5, 0.5, 0.5), 1, 1, YELLOW);
+        forms_list[number_of_forms] = pSurface;
         number_of_forms++;
 
         // Get first "current time"
