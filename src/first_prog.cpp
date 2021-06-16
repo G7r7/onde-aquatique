@@ -258,7 +258,7 @@ int main(int argc, char* args[])
         SDL_Event event;
 
         // Camera position
-        Point camera_position(0, 0, 5.0);
+        Point camera_position(20, -20, 40.0);
 
         // The forms to render
         Form* forms_list[MAX_FORMS_NUMBER];

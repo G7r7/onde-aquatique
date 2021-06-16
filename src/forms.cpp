@@ -131,20 +131,30 @@ void Surface::render()
 //    GLfloat ctrlpoints[6][5][3] = {
 //    {{-3,0,0}, {-1,0,0}, {0,0,0}, {1,0,0}, {3,0,0}},
 //    {{-3,0,-1},{-1,0,-1},{0,0,-1},{1,0,-1},{3,0,-1}},
-//    {{-3,0,-2},{-1,0,-2},{0,-20,-2},{1,0,-2},{3,0,-2}},
+//    {{-3,0,-2},{-1,0,-2},{0,20,-2},{1,0,-2},{3,0,-2}},
 //    {{-3,0,-3},{-1,0,-3},{0,0,-3},{1,0,-3},{3,0,-3}},
 //    {{-3,0,-4},{-1,0,-4},{0,0,-4},{1,0,-4},{3,0,-4}},
 //    {{-3,0,-5},{-1,0,-5},{0,0,-5},{1,0,-5},{3,0,-5}} };
 
-    int i = 6;
-    int j = 5;
+    //Nb Points de contrôle doit être supérieur ou égal au degré + 1
+    //(sKnotCount - sOrder) x (tKnotCount -	tOrder)	control	points.
+    int nbPtsCtrlX = 10;
+    int nbPtsCtrlZ = 10;
 
-    GLfloat ctrlpoints[i][j][3];
+    //Nb de noeuds doit être égal au degré + N - 1
+    int nbNoeudsX = nbPtsCtrlX * 2;
+    int nbNoeudsZ = nbPtsCtrlZ * 2;
+
+    int degreX = nbPtsCtrlX;
+    int degreZ = nbPtsCtrlZ;
+
+    // Construction matrice points de contrôle
+    GLfloat ctrlpoints[nbPtsCtrlX][nbPtsCtrlZ][3];
 
     GLfloat d = 0;
-    for (int a = 0; a < i; a++) {
+    for (int a = 0; a < nbPtsCtrlX; a++) {
         GLfloat c = 0;
-        for (int b = 0; b < j; b++) {
+        for (int b = 0; b < nbPtsCtrlZ; b++) {
             ctrlpoints[a][b][0] = c;
             ctrlpoints[a][b][1] = 0;
             ctrlpoints[a][b][2] = d;
@@ -153,14 +163,49 @@ void Surface::render()
         d++;
     }
 
-// influence parameter setting of each control point
-    GLfloat knots1[12] = { 0.0, 0.0, 0.0, 0.0,0.0,0.0,
-1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; // Control vector of NURBS surface
-    GLfloat knots2[10] = { 0.0, 0.0, 0.0, 0.0,0.0,
-1.0, 1.0, 1.0, 1.0, 1.0}; // Control vector of NURBS surface
+    // influence parameter setting of each control point
+    // Les valeurs des noeuds doivent alterner au minimum tout les degrés fois
+    GLfloat knots1[nbNoeudsX]; // Control vector of NURBS surface
+    {
+        int k = 0;
+        int j = 0;
+        for(int h = 0; k < nbNoeudsX; h++) {
+            for(int i = 0; i < degreX; i++) {
+                j = 0;
+                knots1[k] = h;
+                k = k+1;
+            }
+            j=j+1;
+        }
+    }
+//    {
+//        for(int i = 0; i < nbNoeudsX; i++) {
+//            knots1[i] = i;
+//        }
+//    }
 
+    GLfloat knots2[nbNoeudsZ]; // Control vector of NURBS surface
+    {
+        int k = 0;
+        int j = 0;
+        for(int h = 0; k < nbNoeudsZ; h++) {
+            for(int i = 0; i < degreZ; i++) {
+                j = 0;
+                knots2[k] = h;
+                k = k+1;
+            }
+            j=j+1;
+        }
+    }
+//    {
+//        for(int i = 0; i < nbNoeudsZ; i++) {
+//            knots2[i] = i;
+//        }
+//    }
+
+    glColor3f( 1.0, 1.0, 1.0 );
     gluBeginSurface(theNurb); // Start surface drawing
-    gluNurbsSurface(theNurb, 12, knots1, 10, knots2, 5 * 3, 3, & ctrlpoints [0] [0] [0], 6, 5, GL_MAP2_VERTEX_3); // Define the surface Mathematical model to determine its shape
+    gluNurbsSurface(theNurb, nbNoeudsX, knots1, nbNoeudsZ, knots2, nbPtsCtrlX * 3, 3, & ctrlpoints [0] [0] [0], 10, 10, GL_MAP2_VERTEX_3); // Define the surface Mathematical model to determine its shape
     Form::render();
     gluEndSurface(theNurb); // End surface drawing
 
