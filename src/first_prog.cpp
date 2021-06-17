@@ -313,26 +313,27 @@ int main(int argc, char* args[])
         int nbPtsCtrlX = 6;
         int nbPtsCtrlZ = 6;
 
-        GLfloat ***ctrlPoints = new GLfloat**[nbPtsCtrlX];
-        for (int i = 0; i < nbPtsCtrlX; ++i) {
-          ctrlPoints[i] = new GLfloat*[nbPtsCtrlZ];
-          for (int j = 0; j < nbPtsCtrlZ; ++j)
-            ctrlPoints[i][j] = new GLfloat[3];
-        }
+        GLfloat *ctrlPoints = new GLfloat[nbPtsCtrlX*nbPtsCtrlZ*3];
 
         GLfloat d = 0;
-        for (int a = 0; a < nbPtsCtrlX; a++) {
+        for (int i = 0; i < nbPtsCtrlX; i++) {
             GLfloat c = 0;
-            for (int b = 0; b < nbPtsCtrlZ; b++) {
-                ctrlPoints[a][b][0] = c;
-                ctrlPoints[a][b][1] = 0;
-                ctrlPoints[a][b][2] = d;
+            for (int j = 0; j < nbPtsCtrlZ; j++) {
+                ctrlPoints[(i*6*3)+j*3+0] = c;
+                ctrlPoints[(i*6*3)+j*3+1] = 0;
+                ctrlPoints[(i*6*3)+j*3+2] = d;
                 c++;
             }
             d++;
         }
 
-        ctrlPoints[3][3][1] = 10;
+        ctrlPoints[(3*6*3)+3*3+1] = 10;
+
+    std::cout<<"ctrlPoints : \n";
+    for (int i = 0; i < 108; i++) {
+        std::cout<<i<<" -> "<<ctrlPoints[i]<<"\n";
+    }
+
 
         Surface *pSurface = NULL;
         pSurface = new Surface(ctrlPoints, nbPtsCtrlX, nbPtsCtrlZ);

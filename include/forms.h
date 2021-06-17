@@ -72,7 +72,7 @@ public:
 class Surface : public Form
 {
 private:
-    GLfloat ***ctrlPoints;
+    GLfloat *ctrlPoints;
     int nbPointsX;
     int nbPointsZ;
     GLfloat *NoeudsX;
@@ -80,7 +80,7 @@ private:
     GLfloat *NoeudsZ;
     int nbNoeudsZ;
 public:
-    Surface(GLfloat ***ctrlPoints, int nbPointsX, int nbPointsZ);
+    Surface(GLfloat *ctrlPoints, int nbPointsX, int nbPointsZ);
     void update(double delta_t);
     void render();
 };

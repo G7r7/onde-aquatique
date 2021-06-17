@@ -95,20 +95,25 @@ void Cube_face::render()
     glEnd();
 }
 
-Surface::Surface(GLfloat ***points, int nbPointsX, int nbPointsZ)
+Surface::Surface(GLfloat *points, int nbPointsX, int nbPointsZ)
 {
     //Allocate 3d array of correct size
-    GLfloat ***ctrlPoints = new GLfloat**[nbPointsX];
-    for (int i = 0; i < nbPointsX; ++i) {
-      ctrlPoints[i] = new GLfloat*[nbPointsZ];
-      for (int j = 0; j < nbPointsZ; ++j)
-        ctrlPoints[i][j] = new GLfloat[3];
-    }
+    GLfloat *ctrlPoints = new GLfloat[nbPointsX*nbPointsZ*3];
     // Store pointer in object
     this->ctrlPoints = ctrlPoints;
 
     // Copying array
-    std::copy(points, points + nbPointsX * nbPointsZ, ctrlPoints);
+    std::copy(points, points + nbPointsX * nbPointsZ * 3, ctrlPoints);
+
+    std::cout<<"Points : \n";
+    for (int i = 0; i < 108; i++) {
+        std::cout<<i<<" -> "<<points[i]<<"\n";
+    }
+
+    std::cout<<"ctrlPoints : \n";
+    for (int i = 0; i < 108; i++) {
+        std::cout<<i<<" -> "<<ctrlPoints[i]<<"\n";
+    }
 
     this->nbPointsX = nbPointsX;
     this->nbPointsZ = nbPointsZ;
@@ -181,10 +186,9 @@ void Surface::render()
 //    std::cout<<"Nb pts X : "<<nbPtsCtrlX<<"\n";
 //    std::cout<<"Nb pts Z : "<<nbPtsCtrlZ<<"\n";
 
-
-    glColor3f( 1.0, 1.0, 1.0 );
+    //glColor3f( 1.0, 1.0, 1.0 );
     gluBeginSurface(theNurb); // Start surface drawing
-    gluNurbsSurface(theNurb, nbNoeudsX, NoeudsX, nbNoeudsZ, NoeudsZ, nbPointsX * 3, 3, &ctrlPoints[0][0][0], nbPointsX, nbPointsZ, GL_MAP2_VERTEX_3); // Define the surface Mathematical model to determine its shape
+    gluNurbsSurface(theNurb, nbNoeudsX, NoeudsX, nbNoeudsZ, NoeudsZ, nbPointsX * 3, 3, ctrlPoints, nbPointsX, nbPointsZ, GL_MAP2_VERTEX_3); // Define the surface Mathematical model to determine its shape
     Form::render();
     gluEndSurface(theNurb); // End surface drawing
 
