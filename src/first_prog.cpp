@@ -40,6 +40,13 @@ void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos);
 // Frees media and shuts down SDL
 void close(SDL_Window** window);
 
+// angle de rotation pour la direction de la cam�ra
+float angle=0.0;
+// vecteur repr�sentant la direction de la cam�ra
+float lx=0.0f,lz=-1.0f;
+// Position XZ du
+float x=0.0f,z=5.0f;
+
 
 /***************************************************************************/
 /* Functions implementations                                               */
@@ -186,7 +193,9 @@ void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos)
     glLoadIdentity();
 
     // Set the camera position and parameters
-    gluLookAt(cam_pos.x,cam_pos.y,cam_pos.z, 0.0,0.0,0.0, 0.0,1.0,0.0);
+        gluLookAt(	x, 1.0f, z,
+			x+lx, 1.0f,  z+lz,
+			0.0f, 1.0f,  0.0f);
     // Isometric view
     glRotated(-45, 0, 1, 0);
     glRotated(30, 1, 0, -1);
@@ -242,6 +251,7 @@ int main(int argc, char* args[])
     // OpenGL context
     SDL_GLContext gContext;
 
+    float vitesse = 0.1f; // vitesse de deplacement de la cam�ra
 
     // Start up SDL and create window
     if( !init(&gWindow, &gContext))
@@ -258,7 +268,7 @@ int main(int argc, char* args[])
         SDL_Event event;
 
         // Camera position
-        Point camera_position(20, -20, 40.0);
+        Point camera_position(0, 0, 5.0);
 
         // The forms to render
         Form* forms_list[MAX_FORMS_NUMBER];
@@ -367,6 +377,28 @@ int main(int argc, char* args[])
                     case SDLK_q:
                     case SDLK_ESCAPE:
                         quit = true;
+                        break;
+
+                    case SDLK_LEFT :
+                        angle -= 0.01f;
+                        lx = sin(angle);
+                        lz = -cos(angle);
+                        break;
+
+                    case SDLK_RIGHT :
+                        angle += 0.01f;
+                        lx = sin(angle);
+                        lz = -cos(angle);
+                        break;
+
+                    case SDLK_UP :
+                        x += lx * vitesse;
+                        z += lz * vitesse;
+                        break;
+
+                    case SDLK_DOWN :
+                        x -= lx * vitesse;
+                        z -= lz * vitesse;
                         break;
 
                     default:
