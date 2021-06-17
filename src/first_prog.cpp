@@ -309,8 +309,33 @@ int main(int argc, char* args[])
 //        forms_list[number_of_forms] = pSphere1;
 //        number_of_forms++;
 
+
+        int nbPtsCtrlX = 6;
+        int nbPtsCtrlZ = 6;
+
+        GLfloat ***ctrlPoints = new GLfloat**[nbPtsCtrlX];
+        for (int i = 0; i < nbPtsCtrlX; ++i) {
+          ctrlPoints[i] = new GLfloat*[nbPtsCtrlZ];
+          for (int j = 0; j < nbPtsCtrlZ; ++j)
+            ctrlPoints[i][j] = new GLfloat[3];
+        }
+
+        GLfloat d = 0;
+        for (int a = 0; a < nbPtsCtrlX; a++) {
+            GLfloat c = 0;
+            for (int b = 0; b < nbPtsCtrlZ; b++) {
+                ctrlPoints[a][b][0] = c;
+                ctrlPoints[a][b][1] = 0;
+                ctrlPoints[a][b][2] = d;
+                c++;
+            }
+            d++;
+        }
+
+        ctrlPoints[3][3][1] = 10;
+
         Surface *pSurface = NULL;
-        pSurface = new Surface(Vector(-1,0,0), Vector(0,-1,0), Point(0.5, 0.5, 0.5), 1, 1, YELLOW);
+        pSurface = new Surface(ctrlPoints, nbPtsCtrlX, nbPtsCtrlZ);
         forms_list[number_of_forms] = pSurface;
         number_of_forms++;
 

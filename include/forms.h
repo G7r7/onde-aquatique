@@ -4,7 +4,6 @@
 #include "geometry.h"
 #include "animation.h"
 
-
 class Color
 {
 public:
@@ -73,12 +72,15 @@ public:
 class Surface : public Form
 {
 private:
-    Vector vdir1, vdir2;
-    double length, width;
+    GLfloat ***ctrlPoints;
+    int nbPointsX;
+    int nbPointsZ;
+    GLfloat *NoeudsX;
+    int nbNoeudsX;
+    GLfloat *NoeudsZ;
+    int nbNoeudsZ;
 public:
-    Surface(Vector v1 = Vector(1,0,0), Vector v2 = Vector(0,0,1),
-          Point org = Point(), double l = 1.0, double w = 1.0,
-          Color cl = Color());
+    Surface(GLfloat ***ctrlPoints, int nbPointsX, int nbPointsZ);
     void update(double delta_t);
     void render();
 };
