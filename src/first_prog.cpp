@@ -19,7 +19,7 @@ const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
 // Max number of forms : static allocation
-const int MAX_FORMS_NUMBER = 10;
+const int MAX_FORMS_NUMBER = 1000;
 
 // Animation actualization delay (in ms) => 100 updates per second
 const Uint32 ANIM_DELAY = 10;
@@ -280,20 +280,20 @@ int main(int argc, char* args[])
         // Create here specific forms and add them to the list...
         // Don't forget to update the actual number_of_forms !
 //        Cube_face *pFace = NULL;
-//        pFace = new Cube_face(Vector(1,0,0), Vector(0,1,0), Point(-0.5, -0.5, -0.5), 1, 1, ORANGE);
+//        pFace = new Cube_face(Vector(1,0,0), Vector(0,0,1), Point(0, 0, 0), 1, 1, ORANGE);
 //        forms_list[number_of_forms] = pFace;
 //        number_of_forms++;
 //
 //        Cube_face *pFace2 = NULL;
-//        pFace2 = new Cube_face(Vector(0,1,0), Vector(0,0,1), Point(-0.5, -0.5, -0.5), 1, 1, BLUE);
+//        pFace2 = new Cube_face(Vector(1,0,0), Vector(0,0,1), Point(1, 0, 0), 1, 1, RED);
 //        forms_list[number_of_forms] = pFace2;
 //        number_of_forms++;
-//
+
 //        Cube_face *pFace3 = NULL;
 //        pFace3 = new Cube_face(Vector(1,0,0), Vector(0,0,1), Point(-0.5, -0.5, -0.5), 1, 1, RED);
 //        forms_list[number_of_forms] = pFace3;
 //        number_of_forms++;
-//
+
 //        Cube_face *pFace4 = NULL;
 //        pFace4 = new Cube_face(Vector(0,-1,0), Vector(0,0,-1), Point(0.5, 0.5, 0.5), 1, 1, GREEN);
 //        forms_list[number_of_forms] = pFace4;
@@ -343,10 +343,8 @@ int main(int argc, char* args[])
 //        number_of_forms++;
 
         Maillage *pMaillage = NULL;
-        pMaillage = new Maillage(4, 4);
-        forms_list[number_of_forms] = pMaillage;
-        number_of_forms++;
-
+        pMaillage = new Maillage(3, 4);
+        pMaillage->updateFormList(forms_list, &number_of_forms);
 
         // Get first "current time"
         previous_time = SDL_GetTicks();

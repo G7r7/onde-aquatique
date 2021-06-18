@@ -205,45 +205,53 @@ Maillage::Maillage(int nbPointsX, int nbPointsZ)
     this->nbPointsX = nbPointsX;
     this->nbPointsZ = nbPointsZ;
 
-    //Flat plane of control points
-    double d = 0;
-    for (int i = 0; i < nbPointsX; i++) {
-        double c = 0;
-        for (int j = 0; j < nbPointsZ; j++) {
-            Point monPoint = Point(c, 0, d);
-            ctrlPoints.push_back(monPoint);
-            c++;
-        }
-        d++;
-    }
+    initControlPoints();
 
-    //Flat plane of quadFaces
-    for(int ligne = 0; ligne < nbPointsZ; ligne ++) {
-        for(int colonne = 0; colonne < nbPointsX; colonne++) {
-            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) {
-                // Origine
-                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
-                std::cout<<Origine.x<<", "<<Origine.y<<", "<<Origine.z<<"\n";
-
-                //Vecteur X
-                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
-                Vector X = Vector(Origine, PointX1);
-
-                //Vecteur Z
-                Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
-                Vector Z = Vector(Origine, PointZ1);
-
-                //Cube Face
-                Cube_face face = Cube_face(X, Z, Origine, 1, 1, BLUE);
-                face.getAnim().setPos(Origine);
-
-                this->quadFaces.push_back(face);
-            }
-        }
-    }
-
+    initQuadFaces();
 }
 
+void Maillage::updateFormList(Form **form_list, unsigned short *number_of_forms) {
+    for(int i = 0; i < this->quadFaces.size(); i++) {
+        Cube_face *pCubeFace = NULL;
+        pCubeFace = &quadFaces[i];
+        form_list[*number_of_forms]=pCubeFace;
+        unsigned short test = *number_of_forms;
+        *number_of_forms = *number_of_forms+1;
+    }
+}
+
+void Maillage::initControlPoints() {
+    //Flat plane of control points
+    for (int i = 0; i < nbPointsX; i++) {
+        for (int j = 0; j < nbPointsZ; j++) {
+            Point monPoint = Point(i, 0, j);
+            ctrlPoints.push_back(monPoint);
+        }
+    }
+}
+
+void Maillage::initQuadFaces() {
+    //Flat plane of quadFaces
+    for(int ligne = 0; ligne < nbPointsZ - 1; ligne ++) {
+        for(int colonne = 0; colonne < nbPointsX - 1; colonne++) {
+            // Origine
+            Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+            std::cout<<Origine.x<<", "<<Origine.y<<", "<<Origine.z<<"\n";
+
+            //Vecteur X
+            Vector X = Vector(1,0,0);
+
+            //Vecteur Z
+            Vector Z = Vector(0,0,1);
+
+            //Cube Face
+            Cube_face face = Cube_face(X, Z, Origine, 1, 1, BLUE);
+            //face.getAnim().setPos(Origine);
+
+            this->quadFaces.push_back(face);
+        }
+    }
+}
 
 void Maillage::update(double delta_t)
 {
@@ -263,7 +271,6 @@ void Maillage::update(double delta_t)
 void Maillage::render()
 {
     for(int i = 0; i < this->quadFaces.size(); i++) {
-        Cube_face test = this->quadFaces[i];
         this->quadFaces[i].render();
     }
 }

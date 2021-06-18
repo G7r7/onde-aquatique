@@ -93,8 +93,11 @@ private:
     int nbPointsX;
     int nbPointsZ;
     std::vector<Cube_face> quadFaces;
+    void initControlPoints();
+    void initQuadFaces();
 public:
     Maillage(int nbPointsX, int nbPointsZ);
+    void updateFormList(Form **form_list, unsigned short *number_of_forms);
     void update(double delta_t);
     void render();
 };
