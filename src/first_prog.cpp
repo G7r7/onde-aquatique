@@ -40,13 +40,6 @@ void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos);
 // Frees media and shuts down SDL
 void close(SDL_Window** window);
 
-// angle de rotation pour la direction de la cam�ra
-float angle=0.0;
-// vecteur repr�sentant la direction de la cam�ra
-float lx=0.0f,lz=-1.0f;
-// Position XZ du
-float x=0.0f,z=5.0f;
-
 
 /***************************************************************************/
 /* Functions implementations                                               */
@@ -183,7 +176,7 @@ void update(Form* formlist[MAX_FORMS_NUMBER], double delta_t)
     }
 }
 
-void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos)
+void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos, double deg)
 {
     // Clear color buffer and Z-Buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -193,11 +186,11 @@ void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos)
     glLoadIdentity();
 
     // Set the camera position and parameters
-        gluLookAt(	x, 1.0f, z,
-			x+lx, 1.0f,  z+lz,
+        gluLookAt(  cam_pos.x, cam_pos.y, cam_pos.z,
+                    0, 0, 0,
 			0.0f, 1.0f,  0.0f);
     // Isometric view
-    glRotated(-45, 0, 1, 0);
+    glRotated(deg, 0, 1, 0);
     glRotated(30, 1, 0, -1);
 
     // X, Y and Z axis
@@ -251,7 +244,7 @@ int main(int argc, char* args[])
     // OpenGL context
     SDL_GLContext gContext;
 
-    float vitesse = 0.1f; // vitesse de deplacement de la cam�ra
+
 
     // Start up SDL and create window
     if( !init(&gWindow, &gContext))
@@ -268,7 +261,19 @@ int main(int argc, char* args[])
         SDL_Event event;
 
         // Camera position
-        Point camera_position(0, 0, 100.0);
+       double xcam = 0;
+        double ycam = 0;
+        double zcam = 5;
+
+        float vitesse = 0.1f; // vitesse de deplacement de la cam�ra
+
+        // angle de rotation pour la direction de la cam�ra
+        float angle=0.0;
+        // vecteur repr�sentant la direction de la cam�ra
+        float lx=0.0f,lz=-1.0f;
+
+        double rho = -45;
+        Point camera_position(0, 0, 5.0);
 
         // The forms to render
         Form* forms_list[MAX_FORMS_NUMBER];
@@ -343,7 +348,7 @@ int main(int argc, char* args[])
 //        number_of_forms++;
 
         Maillage *pMaillage = NULL;
-        pMaillage = new Maillage(3, 4);
+        pMaillage = new Maillage(10, 10);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
         // Get first "current time"
@@ -370,31 +375,42 @@ int main(int argc, char* args[])
                     switch(key_pressed)
                     {
                     // Quit the program when 'q' or Escape keys are pressed
-                    case SDLK_q:
+
                     case SDLK_ESCAPE:
                         quit = true;
                         break;
 
-                    case SDLK_LEFT :
-                        angle -= 0.01f;
-                        lx = sin(angle);
-                        lz = -cos(angle);
-                        break;
-
-                    case SDLK_RIGHT :
-                        angle += 0.01f;
-                        lx = sin(angle);
-                        lz = -cos(angle);
-                        break;
-
                     case SDLK_UP :
-                        x += lx * vitesse;
-                        z += lz * vitesse;
+                        xcam += lx * vitesse;
+                        zcam += lz * vitesse;
                         break;
 
                     case SDLK_DOWN :
-                        x -= lx * vitesse;
-                        z -= lz * vitesse;
+                        xcam -= lx * vitesse;
+                        zcam -= lz * vitesse;
+                        break;
+
+                                        case SDLK_q:
+                        rho += 5;
+                        break;
+
+                    case SDLK_d:
+                        rho -= 5;
+                        break;
+
+                    case SDLK_z:
+                        ycam += 0.5;
+                        break;
+
+                    case SDLK_s:
+                        ycam -= 0.5;
+                        break;
+
+                    case SDLK_r:
+                        ycam = 0;
+                        xcam = 0;
+                        zcam = 5;
+                        rho = -45;
                         break;
 
                     default:
@@ -416,7 +432,9 @@ int main(int argc, char* args[])
             }
 
             // Render the scene
-            render(forms_list, camera_position);
+            camera_position = Point(xcam, ycam, zcam);
+            render(forms_list, camera_position, rho);
+
 
             // Update window screen
             SDL_GL_SwapWindow(gWindow);
