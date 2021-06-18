@@ -59,17 +59,17 @@ Cube_face::Cube_face(Vector v1, Vector v2, Point org, double l, double w, Color 
 
 void Cube_face::update(double delta_t)
 {
-    // Complete this part
-    double currentPhi = anim.getPhi();
-    anim.setPhi(currentPhi + 1);
-
-
-    double currentTheta = anim.getTheta();
-    anim.setTheta(currentTheta + 1);
-
-    Point currentPos = anim.getPos();
-    currentPos.x += 0.001;
-    anim.setPos(currentPos);
+//    // Complete this part
+//    double currentPhi = anim.getPhi();
+//    anim.setPhi(currentPhi + 1);
+//
+//
+//    double currentTheta = anim.getTheta();
+//    anim.setTheta(currentTheta + 1);
+//
+//    Point currentPos = anim.getPos();
+//    currentPos.x += 0.001;
+//    anim.setPos(currentPos);
 
 }
 
@@ -105,16 +105,6 @@ Surface::Surface(GLfloat *points, int nbPointsX, int nbPointsZ)
     // Copying array
     std::copy(points, points + nbPointsX * nbPointsZ * 3, ctrlPoints);
 
-    std::cout<<"Points : \n";
-    for (int i = 0; i < 108; i++) {
-        std::cout<<i<<" -> "<<points[i]<<"\n";
-    }
-
-    std::cout<<"ctrlPoints : \n";
-    for (int i = 0; i < 108; i++) {
-        std::cout<<i<<" -> "<<ctrlPoints[i]<<"\n";
-    }
-
     this->nbPointsX = nbPointsX;
     this->nbPointsZ = nbPointsZ;
 
@@ -140,6 +130,7 @@ Surface::Surface(GLfloat *points, int nbPointsX, int nbPointsZ)
         }
     }
     this->NoeudsX = noeudsX;
+    NoeudsX[nbNoeudsX] = 2;
 
     GLfloat *noeudsZ = new GLfloat[nbNoeudsZ];
     {
@@ -161,6 +152,16 @@ Surface::Surface(GLfloat *points, int nbPointsX, int nbPointsZ)
 
 void Surface::update(double delta_t)
 {
+    double currentPhi = anim.getPhi();
+    anim.setPhi(currentPhi + 1);
+
+
+    double currentTheta = anim.getTheta();
+    anim.setTheta(currentTheta + 1);
+
+    Point currentPos = anim.getPos();
+    currentPos.x += 0.001;
+    anim.setPos(currentPos);
 }
 
 
@@ -178,18 +179,91 @@ void Surface::render()
 
 // Sampling fault tolerance tolerance
 
-    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 50);
-    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_OUTLINE_POLYGON);
+
+//
+//    if (ctrlPoints[(3*6*3)+3*3+1] <= -10 || ctrlPoints[(3*6*3)+3*3+1] < 10) {
+//        ctrlPoints[(3*6*3)+3*3+1] += 0.1;
+//    }
+    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 2000);
+    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
 
 //    std::cout<<"Nb noeuds X : "<<nbNoeudsX<<"\n";
 //    std::cout<<"Nb noeuds Z : "<<nbNoeudsZ<<"\n";
 //    std::cout<<"Nb pts X : "<<nbPtsCtrlX<<"\n";
 //    std::cout<<"Nb pts Z : "<<nbPtsCtrlZ<<"\n";
 
-    //glColor3f( 1.0, 1.0, 1.0 );
+    glColor3f( 0.2, 0.7, 0.4 );
     gluBeginSurface(theNurb); // Start surface drawing
     gluNurbsSurface(theNurb, nbNoeudsX, NoeudsX, nbNoeudsZ, NoeudsZ, nbPointsX * 3, 3, ctrlPoints, nbPointsX, nbPointsZ, GL_MAP2_VERTEX_3); // Define the surface Mathematical model to determine its shape
     Form::render();
     gluEndSurface(theNurb); // End surface drawing
 
+}
+
+Maillage::Maillage(int nbPointsX, int nbPointsZ)
+{
+    this->nbPointsX = nbPointsX;
+    this->nbPointsZ = nbPointsZ;
+
+    //Flat plane of control points
+    double d = 0;
+    for (int i = 0; i < nbPointsX; i++) {
+        double c = 0;
+        for (int j = 0; j < nbPointsZ; j++) {
+            Point monPoint = Point(c, 0, d);
+            ctrlPoints.push_back(monPoint);
+            c++;
+        }
+        d++;
+    }
+
+    //Flat plane of quadFaces
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) {
+        for(int colonne = 0; colonne < nbPointsX; colonne++) {
+            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) {
+                // Origine
+                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+                std::cout<<Origine.x<<", "<<Origine.y<<", "<<Origine.z<<"\n";
+
+                //Vecteur X
+                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
+                Vector X = Vector(Origine, PointX1);
+
+                //Vecteur Z
+                Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
+                Vector Z = Vector(Origine, PointZ1);
+
+                //Cube Face
+                Cube_face face = Cube_face(X, Z, Origine, 1, 1, BLUE);
+                face.getAnim().setPos(Origine);
+
+                this->quadFaces.push_back(face);
+            }
+        }
+    }
+
+}
+
+
+void Maillage::update(double delta_t)
+{
+//    double currentPhi = anim.getPhi();
+//    anim.setPhi(currentPhi + 1);
+//
+//
+//    double currentTheta = anim.getTheta();
+//    anim.setTheta(currentTheta + 1);
+//
+//    Point currentPos = anim.getPos();
+//    currentPos.x += 0.001;
+//    anim.setPos(currentPos);
+}
+
+
+void Maillage::render()
+{
+    for(int i = 0; i < this->quadFaces.size(); i++) {
+        Cube_face test = this->quadFaces[i];
+        this->quadFaces[i].render();
+    }
 }

@@ -3,6 +3,7 @@
 
 #include "geometry.h"
 #include "animation.h"
+#include <vector>
 
 class Color
 {
@@ -85,5 +86,17 @@ public:
     void render();
 };
 
+class Maillage : public Form
+{
+private:
+    std::vector<Point> ctrlPoints;
+    int nbPointsX;
+    int nbPointsZ;
+    std::vector<Cube_face> quadFaces;
+public:
+    Maillage(int nbPointsX, int nbPointsZ);
+    void update(double delta_t);
+    void render();
+};
 
 #endif // FORMS_H_INCLUDED

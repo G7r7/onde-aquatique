@@ -268,7 +268,7 @@ int main(int argc, char* args[])
         SDL_Event event;
 
         // Camera position
-        Point camera_position(0, 0, 5.0);
+        Point camera_position(0, 0, 100.0);
 
         // The forms to render
         Form* forms_list[MAX_FORMS_NUMBER];
@@ -320,35 +320,33 @@ int main(int argc, char* args[])
 //        number_of_forms++;
 
 
-        int nbPtsCtrlX = 6;
-        int nbPtsCtrlZ = 6;
+//        int nbPtsCtrlX = 10;
+//        int nbPtsCtrlZ = 10;
+//
+//        GLfloat *ctrlPoints = new GLfloat[nbPtsCtrlX*nbPtsCtrlZ*3];
+//
+//        GLfloat d = 0;
+//        for (int i = 0; i < nbPtsCtrlX; i++) {
+//            GLfloat c = 0;
+//            for (int j = 0; j < nbPtsCtrlZ; j++) {
+//                ctrlPoints[(i*nbPtsCtrlZ*3)+j*3+0] = -c;
+//                ctrlPoints[(i*nbPtsCtrlZ*3)+j*3+1] = 0;
+//                ctrlPoints[(i*nbPtsCtrlZ*3)+j*3+2] = -d;
+//                c++;
+//            }
+//            d++;
+//        }
+//
+//        Surface *pSurface = NULL;
+//        pSurface = new Surface(ctrlPoints, nbPtsCtrlX, nbPtsCtrlZ);
+//        forms_list[number_of_forms] = pSurface;
+//        number_of_forms++;
 
-        GLfloat *ctrlPoints = new GLfloat[nbPtsCtrlX*nbPtsCtrlZ*3];
-
-        GLfloat d = 0;
-        for (int i = 0; i < nbPtsCtrlX; i++) {
-            GLfloat c = 0;
-            for (int j = 0; j < nbPtsCtrlZ; j++) {
-                ctrlPoints[(i*6*3)+j*3+0] = c;
-                ctrlPoints[(i*6*3)+j*3+1] = 0;
-                ctrlPoints[(i*6*3)+j*3+2] = d;
-                c++;
-            }
-            d++;
-        }
-
-        ctrlPoints[(3*6*3)+3*3+1] = 10;
-
-    std::cout<<"ctrlPoints : \n";
-    for (int i = 0; i < 108; i++) {
-        std::cout<<i<<" -> "<<ctrlPoints[i]<<"\n";
-    }
-
-
-        Surface *pSurface = NULL;
-        pSurface = new Surface(ctrlPoints, nbPtsCtrlX, nbPtsCtrlZ);
-        forms_list[number_of_forms] = pSurface;
+        Maillage *pMaillage = NULL;
+        pMaillage = new Maillage(4, 4);
+        forms_list[number_of_forms] = pMaillage;
         number_of_forms++;
+
 
         // Get first "current time"
         previous_time = SDL_GetTicks();
