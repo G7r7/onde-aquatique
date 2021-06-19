@@ -287,9 +287,10 @@ int main(int argc, char* args[])
         pMaillage = new Maillage(10, 10);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
-        std::vector<Point> mesPoints = pMaillage->getControlPoints();
-        mesPoints[25].y = 1;
-        pMaillage->setControlPoints(mesPoints);
+        std::vector<Vector> speedVectors = pMaillage->getSpeedVectors();
+        Vector vy = Vector(0, 0.01, 0);
+        speedVectors[25] = vy;
+        pMaillage->setSpeedVectors(speedVectors);
 
         // Get first "current time"
         previous_time = SDL_GetTicks();
@@ -369,6 +370,7 @@ int main(int argc, char* args[])
             {
                 previous_time = current_time;
                 update(forms_list, 1e-3 * elapsed_time); // International system units : seconds
+                pMaillage->update(3);
             }
 
             // Render the scene

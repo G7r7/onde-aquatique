@@ -103,17 +103,23 @@ class Maillage : public Form
 {
 private:
     std::vector<Point> ctrlPoints;
+    std::vector<Vector> speedVectors;
+    std::vector<Vector> accelerationVectors;
     int nbPointsX;
     int nbPointsZ;
     std::vector<Sphere> spheres;
     std::vector<Triangle> triFaces;
 public:
+    Maillage(int nbPointsX, int nbPointsZ);
     void initControlPoints();
     void initSpheres();
     void initTriFaces();
     std::vector<Point> getControlPoints() {return ctrlPoints;};
+    std::vector<Vector> getSpeedVectors() {return speedVectors;};
+    std::vector<Vector> getAccelerationVectors() {return accelerationVectors;};
     void setControlPoints(std::vector<Point> ctrlPoints);
-    Maillage(int nbPointsX, int nbPointsZ);
+    void setSpeedVectors(std::vector<Vector> speedVectors);
+    void setAccelerationVectors(std::vector<Vector> AccelerationVectors);
     void updateFormList(Form **form_list, unsigned short *number_of_forms);
     void update(double delta_t);
     void render();

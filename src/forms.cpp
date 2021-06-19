@@ -271,16 +271,50 @@ void Maillage::updateFormList(Form **form_list, unsigned short *number_of_forms)
 
 void Maillage::initControlPoints() {
     //Flat plane of control points
+    {
     for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
         for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
             Point monPoint = Point(j, 0, i);
             ctrlPoints.push_back(monPoint);
         }
     }
+    }
+
+    // Null speed vectors
+    {
+    for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
+        for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
+            Vector monVecteur = Vector(0,0,0);
+            speedVectors.push_back(monVecteur);
+        }
+    }
+    }
+
+    // Null acceleration vectors
+    {
+    for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
+        for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
+            Vector monVecteur = Vector(0,0,0);
+            accelerationVectors.push_back(monVecteur);
+        }
+    }
+    }
 }
 
 void Maillage::setControlPoints(std::vector<Point> ctrlPoints) {
     this->ctrlPoints=ctrlPoints;
+    this->initSpheres();
+    this->initTriFaces();
+}
+
+void Maillage::setSpeedVectors(std::vector<Vector> speedVectors) {
+    this->speedVectors=speedVectors;
+    this->initSpheres();
+    this->initTriFaces();
+}
+
+void Maillage::setAccelerationVectors(std::vector<Vector> accelerationVectors) {
+    this->accelerationVectors=accelerationVectors;
     this->initSpheres();
     this->initTriFaces();
 }
@@ -345,16 +379,24 @@ void Maillage::initTriFaces() {
 
 void Maillage::update(double delta_t)
 {
-//    double currentPhi = anim.getPhi();
-//    anim.setPhi(currentPhi + 1);
-//
-//
-//    double currentTheta = anim.getTheta();
-//    anim.setTheta(currentTheta + 1);
-//
-//    Point currentPos = anim.getPos();
-//    currentPos.x += 0.001;
-//    anim.setPos(currentPos);
+    std::vector<Point> mesPoints = this->getControlPoints();
+    std::vector<Vector> mesVitesses = this->getSpeedVectors();
+    std::vector<Vector> mesAccelerations = this->getAccelerationVectors();
+
+    for(int i = 0; i < mesPoints.size(); i++) {
+        mesPoints[i].translate(mesVitesses[i]);
+        if (mesPoints[i].y > 1.5 || mesPoints[i].y < -1.5) {
+            Vector v = mesVitesses[i];
+            if(v.y != 0) {
+                v = Vector(v.x, -v.y, v.z);
+                mesVitesses[i] = v;
+            }
+        }
+    }
+
+    this->setControlPoints(mesPoints);
+    this->setSpeedVectors(mesVitesses);
+    this->setAccelerationVectors(mesAccelerations);
 }
 
 void Maillage::render()
