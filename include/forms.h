@@ -70,6 +70,19 @@ public:
     void render();
 };
 
+// A face of a cube
+class Triangle : public Form
+{
+private:
+    Point p1;
+    Point p2;
+    Point p3;
+public:
+    Triangle(Point p1, Point p2, Point p3 ,Color cl = Color());
+    void update(double delta_t);
+    void render();
+};
+
 class Surface : public Form
 {
 private:
@@ -92,10 +105,16 @@ private:
     std::vector<Point> ctrlPoints;
     int nbPointsX;
     int nbPointsZ;
+    std::vector<Sphere> spheres;
+    std::vector<Triangle> triFaces;
     std::vector<Cube_face> quadFaces;
-    void initControlPoints();
-    void initQuadFaces();
 public:
+    void initControlPoints();
+    void initSpheres();
+    void initTriFaces();
+    void initQuadFaces();
+    std::vector<Point> getControlPoints() {return ctrlPoints;};
+    void setControlPoints(std::vector<Point> ctrlPoints);
     Maillage(int nbPointsX, int nbPointsZ);
     void updateFormList(Form **form_list, unsigned short *number_of_forms);
     void update(double delta_t);

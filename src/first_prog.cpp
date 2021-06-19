@@ -351,6 +351,10 @@ int main(int argc, char* args[])
         pMaillage = new Maillage(10, 10);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
+        std::vector<Point> mesPoints = pMaillage->getControlPoints();
+        mesPoints[25].y = 1;
+        pMaillage->setControlPoints(mesPoints);
+
         // Get first "current time"
         previous_time = SDL_GetTicks();
         // While application is running

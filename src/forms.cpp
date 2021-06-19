@@ -95,6 +95,43 @@ void Cube_face::render()
     glEnd();
 }
 
+Triangle::Triangle(Point p1, Point p2, Point p3, Color cl)
+{
+    this->p1 = p1;
+    this->p2 = p2;
+    this->p3 = p3;
+    this->col = cl;
+}
+
+
+void Triangle::update(double delta_t)
+{
+//    // Complete this part
+//    double currentPhi = anim.getPhi();
+//    anim.setPhi(currentPhi + 1);
+//
+//
+//    double currentTheta = anim.getTheta();
+//    anim.setTheta(currentTheta + 1);
+//
+//    Point currentPos = anim.getPos();
+//    currentPos.x += 0.001;
+//    anim.setPos(currentPos);
+
+}
+
+
+void Triangle::render()
+{
+    glBegin(GL_TRIANGLES);
+    {
+        glVertex3f(p1.x, p1.y, p1.z);
+        glVertex3f(p2.x, p2.y, p2.z);
+        glVertex3f(p3.x, p3.y, p3.z);
+    }
+    glEnd();
+}
+
 Surface::Surface(GLfloat *points, int nbPointsX, int nbPointsZ)
 {
     //Allocate 3d array of correct size
@@ -206,49 +243,108 @@ Maillage::Maillage(int nbPointsX, int nbPointsZ)
     this->nbPointsZ = nbPointsZ;
 
     initControlPoints();
-
-    initQuadFaces();
+    initSpheres();
+    initTriFaces();
 }
 
 void Maillage::updateFormList(Form **form_list, unsigned short *number_of_forms) {
-    for(int i = 0; i < this->quadFaces.size(); i++) {
-        Cube_face *pCubeFace = NULL;
-        pCubeFace = &quadFaces[i];
-        form_list[*number_of_forms]=pCubeFace;
-        unsigned short test = *number_of_forms;
+    for(int i = 0; i < this->spheres.size(); i++) {
+        Sphere *pSphere = NULL;
+        pSphere = &spheres[i];
+        form_list[*number_of_forms]=pSphere;
+        *number_of_forms = *number_of_forms+1;
+    }
+    for(int i = 0; i < this->triFaces.size(); i++) {
+        Triangle *pTriangle = NULL;
+        pTriangle = &triFaces[i];
+        form_list[*number_of_forms]=pTriangle;
         *number_of_forms = *number_of_forms+1;
     }
 }
 
 void Maillage::initControlPoints() {
     //Flat plane of control points
-    for (int i = 0; i < nbPointsX; i++) {
-        for (int j = 0; j < nbPointsZ; j++) {
-            Point monPoint = Point(i, 0, j);
+    for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
+        for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
+            Point monPoint = Point(j, 0, i);
             ctrlPoints.push_back(monPoint);
         }
     }
 }
 
-void Maillage::initQuadFaces() {
-    //Flat plane of quadFaces
-    for(int ligne = 0; ligne < nbPointsZ - 1; ligne ++) {
-        for(int colonne = 0; colonne < nbPointsX - 1; colonne++) {
+void Maillage::setControlPoints(std::vector<Point> ctrlPoints) {
+    this->ctrlPoints=ctrlPoints;
+    this->initSpheres();
+    this->initTriFaces();
+}
+
+void Maillage::initSpheres() {
+    this->spheres.clear();
+
+    //Creating a sphere for each control point
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
+        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
             // Origine
             Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
-            std::cout<<Origine.x<<", "<<Origine.y<<", "<<Origine.z<<"\n";
 
-            //Vecteur X
-            Vector X = Vector(1,0,0);
+            //Sphere
+            Sphere sphere = Sphere(0.2, RED);
+            sphere.getAnim().setPos(Origine);
 
-            //Vecteur Z
-            Vector Z = Vector(0,0,1);
+            this->spheres.push_back(sphere);
+        }
+    }
+}
 
-            //Cube Face
-            Cube_face face = Cube_face(X, Z, Origine, 1, 1, BLUE);
-            //face.getAnim().setPos(Origine);
+void Maillage::initTriFaces() {
+    this->triFaces.clear();
 
-            this->quadFaces.push_back(face);
+    //Flat plane of triFaces
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
+        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
+            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord
+                // Origine
+                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+
+                // Point X
+                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
+
+                //Point Z
+                Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
+
+                //Triangle face
+                Triangle face = Triangle(Origine, PointX1, PointZ1, YELLOW);
+
+                this->triFaces.push_back(face);
+            }
+        }
+    }
+}
+
+void Maillage::initQuadFaces() {
+    this->quadFaces.clear();
+
+    //Flat plane of quadFaces
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
+        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
+            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord
+                // Origine
+                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+
+                //Vecteur X
+                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
+                Vector X = Vector(Origine, PointX1);
+
+                //Vecteur Z
+                Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
+                Vector Z = Vector(Origine, PointZ1);
+
+                //Cube Face
+                Cube_face face = Cube_face(X, Z, Origine, 1, 1, BLUE);
+                face.getAnim().setPos(Origine);
+
+                this->quadFaces.push_back(face);
+            }
         }
     }
 }
@@ -270,7 +366,10 @@ void Maillage::update(double delta_t)
 
 void Maillage::render()
 {
-    for(int i = 0; i < this->quadFaces.size(); i++) {
-        this->quadFaces[i].render();
+    for(int i = 0; i < this->triFaces.size(); i++) {
+        this->triFaces[i].render();
+    }
+    for(int i = 0; i < this->spheres.size(); i++) {
+        this->spheres[i].render();
     }
 }
