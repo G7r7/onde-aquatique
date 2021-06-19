@@ -306,10 +306,10 @@ void Maillage::initSpheres() {
 void Maillage::initTriFaces() {
     this->triFaces.clear();
 
-    //Flat plane of triFaces
+    //Upper triFaces
     for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
         for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
-            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord
+            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord droit et bas
                 // Origine
                 Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
                 // Point X
@@ -318,6 +318,24 @@ void Maillage::initTriFaces() {
                 Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
                 //Triangle face
                 Triangle face = Triangle(Origine, PointX1, PointZ1, RED);
+
+                this->triFaces.push_back(face);
+            }
+        }
+    }
+
+    //Lower triFaces
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
+        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
+            if(colonne < nbPointsX-1 && ligne != 0) { // On ne fait pas de surface à partir du bord haut et droit
+                // Origine
+                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+                // Point X
+                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
+                //Point Z
+                Point PointZ1 = ctrlPoints[(ligne-1)*nbPointsX + colonne+1];
+                //Triangle face
+                Triangle face = Triangle(Origine, PointX1, PointZ1, GREEN);
 
                 this->triFaces.push_back(face);
             }
