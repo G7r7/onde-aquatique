@@ -107,12 +107,10 @@ private:
     int nbPointsZ;
     std::vector<Sphere> spheres;
     std::vector<Triangle> triFaces;
-    std::vector<Cube_face> quadFaces;
 public:
     void initControlPoints();
     void initSpheres();
     void initTriFaces();
-    void initQuadFaces();
     std::vector<Point> getControlPoints() {return ctrlPoints;};
     void setControlPoints(std::vector<Point> ctrlPoints);
     Maillage(int nbPointsX, int nbPointsZ);

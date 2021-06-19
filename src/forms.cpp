@@ -37,11 +37,16 @@ void Sphere::update(double delta_t)
 
 void Sphere::render()
 {
+    Point org = anim.getPos();
+
     GLUquadric *quad;
     quad = gluNewQuadric();
     gluQuadricTexture(quad, 0);
-    gluSphere(quad, radius, 100, 100);
-    Form::render();
+    glColor3f(col.r, col.g, col.b);
+    glTranslated(org.x, org.y, org.z);
+    glRotated(getAnim().getPhi(), 1, 0, 0);
+    glRotated(getAnim().getTheta(), 0, 1, 0);
+    gluSphere(quad, radius, 10, 10);
     gluDeleteQuadric(quad);
 }
 
@@ -123,6 +128,8 @@ void Triangle::update(double delta_t)
 
 void Triangle::render()
 {
+    glColor3f(col.r, col.g, col.b);
+
     glBegin(GL_TRIANGLES);
     {
         glVertex3f(p1.x, p1.y, p1.z);
@@ -288,7 +295,7 @@ void Maillage::initSpheres() {
             Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
 
             //Sphere
-            Sphere sphere = Sphere(0.2, RED);
+            Sphere sphere = Sphere(0.05, YELLOW);
             sphere.getAnim().setPos(Origine);
 
             this->spheres.push_back(sphere);
@@ -305,45 +312,14 @@ void Maillage::initTriFaces() {
             if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord
                 // Origine
                 Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
-
                 // Point X
                 Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
-
                 //Point Z
                 Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
-
                 //Triangle face
-                Triangle face = Triangle(Origine, PointX1, PointZ1, YELLOW);
+                Triangle face = Triangle(Origine, PointX1, PointZ1, RED);
 
                 this->triFaces.push_back(face);
-            }
-        }
-    }
-}
-
-void Maillage::initQuadFaces() {
-    this->quadFaces.clear();
-
-    //Flat plane of quadFaces
-    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
-        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
-            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord
-                // Origine
-                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
-
-                //Vecteur X
-                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
-                Vector X = Vector(Origine, PointX1);
-
-                //Vecteur Z
-                Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
-                Vector Z = Vector(Origine, PointZ1);
-
-                //Cube Face
-                Cube_face face = Cube_face(X, Z, Origine, 1, 1, BLUE);
-                face.getAnim().setPos(Origine);
-
-                this->quadFaces.push_back(face);
             }
         }
     }
@@ -363,13 +339,12 @@ void Maillage::update(double delta_t)
 //    anim.setPos(currentPos);
 }
 
-
 void Maillage::render()
 {
-    for(int i = 0; i < this->triFaces.size(); i++) {
-        this->triFaces[i].render();
-    }
     for(int i = 0; i < this->spheres.size(); i++) {
         this->spheres[i].render();
+    }
+    for(int i = 0; i < this->triFaces.size(); i++) {
+        this->triFaces[i].render();
     }
 }
