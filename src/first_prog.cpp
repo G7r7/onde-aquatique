@@ -285,7 +285,7 @@ int main(int argc, char* args[])
 
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(30, 30);
-        Wave myWave = Wave(Point(5,0,5),1,1,Vector(1,0,0),Vector(0,0,0));
+        Wave myWave = Wave(Point(5,0,5),10,6,Vector(1,0,0),Vector(0,0,0));
         pMaillage->addWave(myWave);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
@@ -369,7 +369,7 @@ int main(int argc, char* args[])
             {
                 previous_time = current_time;
                 update(forms_list, 1e-3 * elapsed_time); // International system units : seconds
-                pMaillage->update(3);
+                pMaillage->update(1e-3 * elapsed_time);
             }
 
             // Render the scene

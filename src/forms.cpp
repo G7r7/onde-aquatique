@@ -385,20 +385,24 @@ void Maillage::update(double delta_t)
 
     //Moving wave origin
     for(int i = 0; i < waves.size(); i++) {
-        waves[i].getWaveOrigin().translate(waves[i].getWaveSpeed()*delta_t);
         Point origin = waves[i].getWaveOrigin();
+        origin.translate(waves[i].getWaveSpeed()*delta_t);
+        waves[i].setWaveOrigin(origin);
+
         //Deforming basePoints with each wave
 
         for(int j = 0; j < basePoints.size(); j++) {
             //Searching points in the radius
-            if((pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5) <= waves[i].getWaveRadius())) {
-                    mesPoints[j].y = pow(
+            GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
+
+            if(distanceToOrigin <= waves[i].getWaveRadius()) {
+                    mesPoints[j].y = - pow(
                                          (
-                                                pow((basePoints[j].x-origin.x),2)
+                                                pow(basePoints[j].x-origin.x,2)
                                             +   pow(basePoints[j].z-origin.z,2)
                                           )
                         /   pow(waves[i].getWaveRadius()/waves[i].getWaveHeight(),2)
-                                         ,0.5);
+                                         ,0.5) + waves[i].getWaveHeight();
             }
         }
     }
@@ -424,9 +428,9 @@ void Maillage::addWave(Wave myWave)
 
 
 Wave::Wave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration) {
-    waveOrigin = waveOrigin;
-    waveHeight = waveHeight;
-    waveRadius = waveRadius;
-    waveSpeed = waveSpeed;
-    waveAcceleration = waveAcceleration;
+    this->waveOrigin = waveOrigin;
+    this->waveHeight = waveHeight;
+    this->waveRadius = waveRadius;
+    this->waveSpeed = waveSpeed;
+    this->waveAcceleration = waveAcceleration;
 }
