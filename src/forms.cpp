@@ -386,7 +386,8 @@ void Maillage::update(double delta_t)
     //Moving wave origin
     for(int i = 0; i < waves.size(); i++) {
         Point origin = waves[i].getWaveOrigin();
-        origin.translate(waves[i].getWaveSpeed()*delta_t);
+        Vector speed = waves[i].getWaveSpeed();
+        origin.translate(speed.integral(delta_t));
         waves[i].setWaveOrigin(origin);
 
         //Deforming basePoints with each wave
@@ -396,7 +397,7 @@ void Maillage::update(double delta_t)
             GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
 
             if(distanceToOrigin <= waves[i].getWaveRadius()) {
-                    mesPoints[j].y = - pow(
+                    mesPoints[j].y += - pow(
                                          (
                                                 pow(basePoints[j].x-origin.x,2)
                                             +   pow(basePoints[j].z-origin.z,2)
