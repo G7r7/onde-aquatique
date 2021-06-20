@@ -263,7 +263,7 @@ int main(int argc, char* args[])
         // Camera position
        double xcam = 0;
         double ycam = 0;
-        double zcam = 5;
+        double zcam = 50;
 
         float vitesse = 0.1f; // vitesse de deplacement de la cam�ra
 
@@ -284,12 +284,15 @@ int main(int argc, char* args[])
         }
 
         Maillage *pMaillage = NULL;
-        pMaillage = new Maillage(10, 10);
+        pMaillage = new Maillage(30, 2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
+        std::vector<Point> mesPoints = pMaillage->getControlPoints();
+        mesPoints[0].y = 1;
+        pMaillage->setControlPoints(mesPoints);
         std::vector<Vector> speedVectors = pMaillage->getSpeedVectors();
-        Vector vy = Vector(0, 0.01, 0);
-        speedVectors[25] = vy;
+        Vector vx = Vector(0.51, 0, 0);
+        speedVectors[0] = vx;
         pMaillage->setSpeedVectors(speedVectors);
 
         // Get first "current time"

@@ -383,16 +383,44 @@ void Maillage::update(double delta_t)
     std::vector<Vector> mesVitesses = this->getSpeedVectors();
     std::vector<Vector> mesAccelerations = this->getAccelerationVectors();
 
+//    for(int i = 0; i < mesPoints.size(); i++) {
+//        mesPoints[i].translate(mesVitesses[i]);
+//        if (mesPoints[i].y > 1.5 || mesPoints[i].y < -1.5) {
+//            Vector v = mesVitesses[i];
+//            if(v.y != 0) {
+//                v = Vector(v.x, -v.y, v.z);
+//                mesVitesses[i] = v;
+//            }
+//        }
+//    }
+
     for(int i = 0; i < mesPoints.size(); i++) {
-        mesPoints[i].translate(mesVitesses[i]);
-        if (mesPoints[i].y > 1.5 || mesPoints[i].y < -1.5) {
-            Vector v = mesVitesses[i];
-            if(v.y != 0) {
-                v = Vector(v.x, -v.y, v.z);
-                mesVitesses[i] = v;
+        // On translate une copie de chaque point par sa vitesse
+        Point pointVirtuel = mesPoints[i];
+        pointVirtuel.translate(mesVitesses[i]*delta_t);
+
+        // Boucle sur ctrlPoints pour trouver le point de distance minimale avec pointVirtuel
+        int indiceMin;
+        double normeMin = 99999999999999999;
+
+        for(int j = 0; j < ctrlPoints.size(); j++) {
+            double norme = Vector(ctrlPoints[j], pointVirtuel).norm();
+            if(norme < normeMin && j != i) {
+                normeMin = norme;
+                indiceMin = j;
             }
         }
+
+        // On inverse les coordonnées, les vitesse et accélérations entre mesPoints[i] et mesPoints[indiceMin]
+        Point pTemp = mesPoints[i];
+        mesPoints[i].y = mesPoints[indiceMin].y;
+        mesPoints[indiceMin].y = pTemp.y;
+
+        Vector vTemp = mesVitesses[i];
+        mesVitesses[i] = mesVitesses[indiceMin];
+        mesVitesses[indiceMin] = vTemp;
     }
+
 
     this->setControlPoints(mesPoints);
     this->setSpeedVectors(mesVitesses);
