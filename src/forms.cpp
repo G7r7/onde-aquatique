@@ -275,10 +275,12 @@ void Maillage::initControlPoints() {
     for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
         for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
             Point monPoint = Point(j, 0, i);
-            ctrlPoints.push_back(monPoint);
+            basePoints.push_back(monPoint);
         }
     }
     }
+
+    pointsToRender = basePoints;
 
     // Null speed vectors
     {
@@ -301,8 +303,8 @@ void Maillage::initControlPoints() {
     }
 }
 
-void Maillage::setControlPoints(std::vector<Point> ctrlPoints) {
-    this->ctrlPoints=ctrlPoints;
+void Maillage::setPointsToRender(std::vector<Point> pointsToRender) {
+    this->pointsToRender=pointsToRender;
     this->initSpheres();
     this->initTriFaces();
 }
@@ -326,7 +328,7 @@ void Maillage::initSpheres() {
     for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
         for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
             // Origine
-            Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+            Point Origine = pointsToRender[ligne*nbPointsX + colonne];
 
             //Sphere
             Sphere sphere = Sphere(0.05, YELLOW);
@@ -345,11 +347,11 @@ void Maillage::initTriFaces() {
         for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
             if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord droit et bas
                 // Origine
-                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+                Point Origine = pointsToRender[ligne*nbPointsX + colonne];
                 // Point X
-                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
+                Point PointX1 = pointsToRender[ligne*nbPointsX + colonne+1];
                 //Point Z
-                Point PointZ1 = ctrlPoints[(ligne+1)*nbPointsX + colonne];
+                Point PointZ1 = pointsToRender[(ligne+1)*nbPointsX + colonne];
                 //Triangle face
                 Triangle face = Triangle(Origine, PointX1, PointZ1, RED);
 
@@ -363,11 +365,11 @@ void Maillage::initTriFaces() {
         for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
             if(colonne < nbPointsX-1 && ligne != 0) { // On ne fait pas de surface à partir du bord haut et droit
                 // Origine
-                Point Origine = ctrlPoints[ligne*nbPointsX + colonne];
+                Point Origine = pointsToRender[ligne*nbPointsX + colonne];
                 // Point X
-                Point PointX1 = ctrlPoints[ligne*nbPointsX + colonne+1];
+                Point PointX1 = pointsToRender[ligne*nbPointsX + colonne+1];
                 //Point Z
-                Point PointZ1 = ctrlPoints[(ligne-1)*nbPointsX + colonne+1];
+                Point PointZ1 = pointsToRender[(ligne-1)*nbPointsX + colonne+1];
                 //Triangle face
                 Triangle face = Triangle(Origine, PointX1, PointZ1, GREEN);
 
@@ -379,52 +381,30 @@ void Maillage::initTriFaces() {
 
 void Maillage::update(double delta_t)
 {
-    std::vector<Point> mesPoints = this->getControlPoints();
-    std::vector<Vector> mesVitesses = this->getSpeedVectors();
-    std::vector<Vector> mesAccelerations = this->getAccelerationVectors();
+    std::vector<Point> mesPoints = basePoints;
 
-//    for(int i = 0; i < mesPoints.size(); i++) {
-//        mesPoints[i].translate(mesVitesses[i]);
-//        if (mesPoints[i].y > 1.5 || mesPoints[i].y < -1.5) {
-//            Vector v = mesVitesses[i];
-//            if(v.y != 0) {
-//                v = Vector(v.x, -v.y, v.z);
-//                mesVitesses[i] = v;
-//            }
-//        }
-//    }
+    //Moving wave origin
+    for(int i = 0; i < waves.size(); i++) {
+        waves[i].getWaveOrigin().translate(waves[i].getWaveSpeed()*delta_t);
+        Point origin = waves[i].getWaveOrigin();
+        //Deforming basePoints with each wave
 
-    for(int i = 0; i < mesPoints.size(); i++) {
-        // On translate une copie de chaque point par sa vitesse
-        Point pointVirtuel = mesPoints[i];
-        pointVirtuel.translate(mesVitesses[i]*delta_t);
-
-        // Boucle sur ctrlPoints pour trouver le point de distance minimale avec pointVirtuel
-        int indiceMin;
-        double normeMin = 99999999999999999;
-
-        for(int j = 0; j < ctrlPoints.size(); j++) {
-            double norme = Vector(ctrlPoints[j], pointVirtuel).norm();
-            if(norme < normeMin && j != i) {
-                normeMin = norme;
-                indiceMin = j;
+        for(int j = 0; j < basePoints.size(); j++) {
+            //Searching points in the radius
+            if((pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5) <= waves[i].getWaveRadius())) {
+                    mesPoints[j].y = pow(
+                                         (
+                                                pow((basePoints[j].x-origin.x),2)
+                                            +   pow(basePoints[j].z-origin.z,2)
+                                          )
+                        /   pow(waves[i].getWaveRadius()/waves[i].getWaveHeight(),2)
+                                         ,0.5);
             }
         }
-
-        // On inverse les coordonnées, les vitesse et accélérations entre mesPoints[i] et mesPoints[indiceMin]
-        Point pTemp = mesPoints[i];
-        mesPoints[i].y = mesPoints[indiceMin].y;
-        mesPoints[indiceMin].y = pTemp.y;
-
-        Vector vTemp = mesVitesses[i];
-        mesVitesses[i] = mesVitesses[indiceMin];
-        mesVitesses[indiceMin] = vTemp;
     }
 
+    this->setPointsToRender(mesPoints);
 
-    this->setControlPoints(mesPoints);
-    this->setSpeedVectors(mesVitesses);
-    this->setAccelerationVectors(mesAccelerations);
 }
 
 void Maillage::render()
@@ -435,4 +415,18 @@ void Maillage::render()
     for(int i = 0; i < this->triFaces.size(); i++) {
         this->triFaces[i].render();
     }
+}
+
+void Maillage::addWave(Wave myWave)
+{
+    waves.push_back(myWave);
+}
+
+
+Wave::Wave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration) {
+    waveOrigin = waveOrigin;
+    waveHeight = waveHeight;
+    waveRadius = waveRadius;
+    waveSpeed = waveSpeed;
+    waveAcceleration = waveAcceleration;
 }

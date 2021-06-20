@@ -284,16 +284,12 @@ int main(int argc, char* args[])
         }
 
         Maillage *pMaillage = NULL;
-        pMaillage = new Maillage(30, 2);
+        pMaillage = new Maillage(30, 30);
+        Wave myWave = Wave(Point(5,0,5),1,1,Vector(1,0,0),Vector(0,0,0));
+        pMaillage->addWave(myWave);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
-        std::vector<Point> mesPoints = pMaillage->getControlPoints();
-        mesPoints[0].y = 1;
-        pMaillage->setControlPoints(mesPoints);
-        std::vector<Vector> speedVectors = pMaillage->getSpeedVectors();
-        Vector vx = Vector(0.51, 0, 0);
-        speedVectors[0] = vx;
-        pMaillage->setSpeedVectors(speedVectors);
+
 
         // Get first "current time"
         previous_time = SDL_GetTicks();

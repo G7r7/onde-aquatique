@@ -99,10 +99,34 @@ public:
     void render();
 };
 
+class Wave
+{
+private:
+    Point waveOrigin;
+    GLfloat waveHeight;
+    GLfloat waveRadius;
+    Vector waveSpeed;
+    Vector waveAcceleration;
+public:
+    Wave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration);
+    Point getWaveOrigin() {return waveOrigin;}
+    GLfloat getWaveHeight() {return waveHeight;}
+    GLfloat getWaveRadius() {return waveRadius;}
+    Vector getWaveSpeed() {return waveSpeed;}
+    Vector getWaveAcceleration() {return waveAcceleration;}
+    void setWaveOrigin(Point p) {waveOrigin = p;}
+    void setWaveHeight(GLfloat h) {waveHeight = h;}
+    void setWaveRadius(GLfloat r) {waveRadius = r;}
+    void setWaveSpeed(Vector v) {waveSpeed = v;}
+    void setWaveAcceleration(Vector v) {waveSpeed = v;}
+};
+
 class Maillage : public Form
 {
 private:
-    std::vector<Point> ctrlPoints;
+    std::vector<Wave> waves;
+    std::vector<Point> pointsToRender;
+    std::vector<Point> basePoints;
     std::vector<Vector> speedVectors;
     std::vector<Vector> accelerationVectors;
     int nbPointsX;
@@ -114,15 +138,17 @@ public:
     void initControlPoints();
     void initSpheres();
     void initTriFaces();
-    std::vector<Point> getControlPoints() {return ctrlPoints;};
+    std::vector<Point> getControlPoints() {return pointsToRender;};
     std::vector<Vector> getSpeedVectors() {return speedVectors;};
     std::vector<Vector> getAccelerationVectors() {return accelerationVectors;};
-    void setControlPoints(std::vector<Point> ctrlPoints);
+    void setPointsToRender(std::vector<Point> pointsToRender);
     void setSpeedVectors(std::vector<Vector> speedVectors);
     void setAccelerationVectors(std::vector<Vector> AccelerationVectors);
+    void addWave(Wave myWave);
     void updateFormList(Form **form_list, unsigned short *number_of_forms);
     void update(double delta_t);
     void render();
 };
+
 
 #endif // FORMS_H_INCLUDED
