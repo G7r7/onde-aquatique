@@ -99,27 +99,35 @@ public:
     void render();
 };
 
+enum WaveType {conic = 1, circular = 2};
+
 class Wave
 {
 private:
+    WaveType waveType;
     Point waveOrigin;
     GLfloat waveHeight;
     GLfloat waveRadius;
+    GLfloat waveWidth;
     Vector waveSpeed;
     Vector waveAcceleration;
 public:
-    Wave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration);
+    Wave(WaveType waveType, Point waveOrigin, GLfloat waveHeight, GLfloat waveWidth, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration);
+    WaveType getWaveType() {return waveType;}
     Point getWaveOrigin() {return waveOrigin;}
     GLfloat getWaveHeight() {return waveHeight;}
+    GLfloat getWaveWidth() {return waveWidth;}
     GLfloat getWaveRadius() {return waveRadius;}
     Vector getWaveSpeed() {return waveSpeed;}
     Vector getWaveAcceleration() {return waveAcceleration;}
     void setWaveOrigin(Point p) {waveOrigin = p;}
     void setWaveHeight(GLfloat h) {waveHeight = h;}
     void setWaveRadius(GLfloat r) {waveRadius = r;}
+    void setWaveWidth(GLfloat w) {waveWidth = w;}
     void setWaveSpeed(Vector v) {waveSpeed = v;}
     void setWaveAcceleration(Vector v) {waveSpeed = v;}
 };
+
 
 class Maillage : public Form
 {
