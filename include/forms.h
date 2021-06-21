@@ -109,7 +109,7 @@ public:
     Point getWaveOrigin() {return waveOrigin;}
     void setWaveOrigin(Point p) {waveOrigin = p;}
     virtual std::vector<Point> deformGrid(std::vector<Point>) = 0;
-    void updateWave(double delta_t) = 0;
+    virtual void updateWave(double delta_t) = 0;
 };
 
 
@@ -162,7 +162,7 @@ public:
 class Maillage : public Form
 {
 private:
-    std::vector<Wave> waves;
+    std::vector<Wave*> waves;
     std::vector<Point> pointsToRender;
     std::vector<Point> basePoints;
     std::vector<Vector> speedVectors;
@@ -182,7 +182,7 @@ public:
     void setPointsToRender(std::vector<Point> pointsToRender);
     void setSpeedVectors(std::vector<Vector> speedVectors);
     void setAccelerationVectors(std::vector<Vector> AccelerationVectors);
-    void addWave(Wave myWave);
+    void addWave(Wave *myWave);
     void updateFormList(Form **form_list, unsigned short *number_of_forms);
     void update(double delta_t);
     void render();

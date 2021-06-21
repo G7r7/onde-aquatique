@@ -265,11 +265,9 @@ int main(int argc, char* args[])
         double ycam = 0;
         double zcam = 50;
 
-        float vitesse = 0.1f; // vitesse de deplacement de la cam�ra
+        float vitesse = 0.1f; // vitesse de deplacement de la camera
 
-        // angle de rotation pour la direction de la cam�ra
-        float angle=0.0;
-        // vecteur repr�sentant la direction de la cam�ra
+        // vecteur repr�sentant la direction de la camera
         float lx=0.0f,lz=-1.0f;
 
         double rho = -45;
@@ -285,12 +283,12 @@ int main(int argc, char* args[])
 
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(30, 30);
-        CircularWave circular1 = CircularWave(Point(5,0,5),2,2,4,0.001,0);
-        ConicWave conic1 = ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
-        ConicWave conic2 = ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
-        pMaillage->addWave(circular1);
-        pMaillage->addWave(conic1);
-        pMaillage->addWave(conic2);
+        CircularWave *pCircular1 = new CircularWave(Point(5,0,5),2,2,4,1,0);
+        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
+        ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
+        pMaillage->addWave(pCircular1);
+        pMaillage->addWave(pConic1);
+        pMaillage->addWave(pConic2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
 

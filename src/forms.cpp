@@ -387,8 +387,8 @@ void Maillage::update(double delta_t)
     for(int i = 0; i < waves.size(); i++) {
 
         //Deforming basePoints with each wave
-        mesPoints = waves[i].deformGrid(mesPoints);
-        waves[i].updateWave(delta_t);
+        mesPoints = waves[i]->deformGrid(mesPoints);
+        waves[i]->updateWave(delta_t);
     }
 
     this->setPointsToRender(mesPoints);
@@ -405,7 +405,7 @@ void Maillage::render()
     }
 }
 
-void Maillage::addWave(Wave myWave)
+void Maillage::addWave(Wave *myWave)
 {
     waves.push_back(myWave);
 }
