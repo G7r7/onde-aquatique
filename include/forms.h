@@ -99,35 +99,65 @@ public:
     void render();
 };
 
-enum WaveType {conic = 1, circular = 2};
-
 class Wave
 {
-private:
-    WaveType waveType;
+protected:
     Point waveOrigin;
+public:
+    //Wave(Point waveOrigin);
+
+    Point getWaveOrigin() {return waveOrigin;}
+    void setWaveOrigin(Point p) {waveOrigin = p;}
+    virtual std::vector<Point> deformGrid(std::vector<Point>) = 0;
+    void updateWave(double delta_t) = 0;
+};
+
+
+class ConicWave : public Wave
+{
+private:
     GLfloat waveHeight;
     GLfloat waveRadius;
-    GLfloat waveWidth;
     Vector waveSpeed;
     Vector waveAcceleration;
 public:
-    Wave(WaveType waveType, Point waveOrigin, GLfloat waveHeight, GLfloat waveWidth, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration);
-    WaveType getWaveType() {return waveType;}
-    Point getWaveOrigin() {return waveOrigin;}
+    ConicWave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration);
     GLfloat getWaveHeight() {return waveHeight;}
-    GLfloat getWaveWidth() {return waveWidth;}
     GLfloat getWaveRadius() {return waveRadius;}
     Vector getWaveSpeed() {return waveSpeed;}
     Vector getWaveAcceleration() {return waveAcceleration;}
+    void setWaveHeight(GLfloat h) {waveHeight = h;}
+    void setWaveRadius(GLfloat r) {waveRadius = r;}
+    void setWaveSpeed(Vector v) {waveSpeed = v;}
+    void setWaveAcceleration(Vector v) {waveSpeed = v;}
+    std::vector<Point> deformGrid(std::vector<Point>);
+    void updateWave(double delta_t);
+};
+
+class CircularWave : public Wave
+{
+private:
+    GLfloat waveHeight;
+    GLfloat waveRadius;
+    GLfloat waveWidth;
+    GLfloat waveSpeed;
+    GLfloat waveAcceleration;
+public:
+    CircularWave(Point waveOrigin, GLfloat waveHeight, GLfloat waveWidth, GLfloat waveRadius, GLfloat waveSpeed, GLfloat waveAcceleration);
+    GLfloat getWaveHeight() {return waveHeight;}
+    GLfloat getWaveWidth() {return waveWidth;}
+    GLfloat getWaveRadius() {return waveRadius;}
+    GLfloat getWaveSpeed() {return waveSpeed;}
+    GLfloat getWaveAcceleration() {return waveAcceleration;}
     void setWaveOrigin(Point p) {waveOrigin = p;}
     void setWaveHeight(GLfloat h) {waveHeight = h;}
     void setWaveRadius(GLfloat r) {waveRadius = r;}
     void setWaveWidth(GLfloat w) {waveWidth = w;}
-    void setWaveSpeed(Vector v) {waveSpeed = v;}
-    void setWaveAcceleration(Vector v) {waveSpeed = v;}
+    void setWaveSpeed(GLfloat v) {waveSpeed = v;}
+    void setWaveAcceleration(GLfloat a) {waveAcceleration = a;}
+    std::vector<Point> deformGrid(std::vector<Point>);
+    void updateWave(double delta_t);
 };
-
 
 class Maillage : public Form
 {

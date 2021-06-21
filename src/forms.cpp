@@ -385,48 +385,10 @@ void Maillage::update(double delta_t)
 
     //Moving wave origin
     for(int i = 0; i < waves.size(); i++) {
-        Point origin = waves[i].getWaveOrigin();
-        Vector speed = waves[i].getWaveSpeed();
 
         //Deforming basePoints with each wave
-
-        for(int j = 0; j < basePoints.size(); j++) {
-            if(waves[i].getWaveType() == conic) {
-                origin.translate(speed.integral(delta_t));
-                waves[i].setWaveOrigin(origin);
-                //Searching points in the radius
-                GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
-
-                if(distanceToOrigin <= waves[i].getWaveRadius()) {
-                        mesPoints[j].y += - pow(
-                                             (
-                                                    pow(basePoints[j].x-origin.x,2)
-                                                +   pow(basePoints[j].z-origin.z,2)
-                                              )
-                            /   pow(waves[i].getWaveRadius()/waves[i].getWaveHeight(),2)
-                                             ,0.5) + waves[i].getWaveHeight();
-                }
-            }
-            if(waves[i].getWaveType() == circular) {
-                GLfloat radius = waves[i].getWaveRadius();
-                radius += (speed.x*delta_t);
-                waves[i].setWaveRadius(radius);
-                //Searching points before and after the radius (+ and - width)
-                GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
-
-                if(distanceToOrigin >= waves[i].getWaveRadius()-waves[i].getWaveWidth()/2
-                   && distanceToOrigin <= waves[i].getWaveRadius()+waves[i].getWaveWidth()/2) {
-//                        mesPoints[j].y += - pow(
-//                                             (
-//                                                    pow(basePoints[j].x-origin.x,2)
-//                                                +   pow(basePoints[j].z-origin.z,2)
-//                                              )
-//                            /   pow(waves[i].getWaveRadius()/waves[i].getWaveHeight(),2)
-//                                             ,0.5) + waves[i].getWaveHeight();
-                    mesPoints[j].y += waves[i].getWaveHeight();
-                }
-            }
-        }
+        mesPoints = waves[i].deformGrid(mesPoints);
+        waves[i].updateWave(delta_t);
     }
 
     this->setPointsToRender(mesPoints);
@@ -449,12 +411,73 @@ void Maillage::addWave(Wave myWave)
 }
 
 
-Wave::Wave(WaveType waveType, Point waveOrigin, GLfloat waveHeight, GLfloat waveWidth, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration) {
-    this->waveType = waveType;
+//Wave::Wave(Point waveOrigin) {
+//    this->waveOrigin = waveOrigin;
+//}
+
+ConicWave::ConicWave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, Vector waveSpeed, Vector waveAcceleration) {
     this->waveOrigin = waveOrigin;
     this->waveHeight = waveHeight;
     this->waveRadius = waveRadius;
-    this->waveWidth = waveWidth;
     this->waveSpeed = waveSpeed;
     this->waveAcceleration = waveAcceleration;
+}
+
+void ConicWave::updateWave(double delta_t) {
+    Point origin = getWaveOrigin();
+    origin.translate(getWaveSpeed().integral(delta_t));
+    setWaveOrigin(origin);
+}
+
+std::vector<Point> ConicWave::deformGrid(std::vector<Point> basePoints) {
+        for(int j = 0; j < basePoints.size(); j++) {
+            Point origin = getWaveOrigin();
+            //Searching points in the radius
+            GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
+
+            if(distanceToOrigin <= getWaveRadius()) {
+                    basePoints[j].y += - pow(
+                                         (
+                                                pow(basePoints[j].x-origin.x,2)
+                                            +   pow(basePoints[j].z-origin.z,2)
+                                          )
+                        /   pow(getWaveRadius()/getWaveHeight(),2)
+                                         ,0.5) + getWaveHeight();
+            }
+        }
+
+        return basePoints;
+
+}
+
+CircularWave::CircularWave(Point waveOrigin, GLfloat waveHeight, GLfloat waveWidth, GLfloat waveRadius, GLfloat waveSpeed, GLfloat waveAcceleration) {
+    this->waveOrigin = waveOrigin;
+    this->waveWidth = waveWidth;
+    this->waveHeight = waveHeight;
+    this->waveRadius = waveRadius;
+    this->waveSpeed = waveSpeed;
+    this->waveAcceleration = waveAcceleration;
+}
+
+void CircularWave::updateWave(double delta_t) {
+        GLfloat radius = getWaveRadius();
+        radius += (getWaveSpeed()*delta_t);
+        setWaveRadius(radius);
+}
+
+std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
+
+        Point origin = getWaveOrigin();
+
+        for(int j = 0; j < basePoints.size(); j++) {
+            //Searching points before and after the radius (+ and - width)
+            GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
+
+            if(distanceToOrigin >= getWaveRadius()-getWaveWidth()/2
+               && distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
+                basePoints[j].y += getWaveHeight();
+            }
+        }
+
+        return basePoints;
 }

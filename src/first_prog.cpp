@@ -285,12 +285,12 @@ int main(int argc, char* args[])
 
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(30, 30);
-        Wave circularWave = Wave(circular, Point(15,0,15),3,3,0,Vector(0.001,0,1),Vector(0,0,0));
-//        Wave myWave = Wave(conic, Point(5,0,5),10,6,Vector(1,0,1),Vector(0,0,0));
-//        Wave myWave2 = Wave(conic, Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
-//        pMaillage->addWave(myWave);
-//        pMaillage->addWave(myWave2);
-        pMaillage->addWave(circularWave);
+        CircularWave circular1 = CircularWave(Point(5,0,5),2,2,4,0.001,0);
+        ConicWave conic1 = ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
+        ConicWave conic2 = ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
+        pMaillage->addWave(circular1);
+        pMaillage->addWave(conic1);
+        pMaillage->addWave(conic2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
 
