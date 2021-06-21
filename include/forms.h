@@ -19,6 +19,7 @@ const Color GREEN(0.0f, 1.0f, 0.0f);
 const Color YELLOW(1.0f, 1.0f, 0.0f);
 const Color WHITE(1.0f, 1.0f, 1.0f);
 const Color ORANGE(1.0f, 0.65f, 0.0f);
+const Color DODGERBLUE(0.11, 0.56, 1.0);
 
 
 // Generic class to render and animate an object

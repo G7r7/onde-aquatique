@@ -331,7 +331,7 @@ void Maillage::initSpheres() {
             Point Origine = pointsToRender[ligne*nbPointsX + colonne];
 
             //Sphere
-            Sphere sphere = Sphere(0.05, YELLOW);
+            Sphere sphere = Sphere(0.1, DODGERBLUE);
             sphere.getAnim().setPos(Origine);
 
             this->spheres.push_back(sphere);
@@ -353,7 +353,7 @@ void Maillage::initTriFaces() {
                 //Point Z
                 Point PointZ1 = pointsToRender[(ligne+1)*nbPointsX + colonne];
                 //Triangle face
-                Triangle face = Triangle(Origine, PointX1, PointZ1, RED);
+                Triangle face = Triangle(Origine, PointX1, PointZ1, DODGERBLUE);
 
                 this->triFaces.push_back(face);
             }
@@ -371,7 +371,7 @@ void Maillage::initTriFaces() {
                 //Point Z
                 Point PointZ1 = pointsToRender[(ligne-1)*nbPointsX + colonne+1];
                 //Triangle face
-                Triangle face = Triangle(Origine, PointX1, PointZ1, GREEN);
+                Triangle face = Triangle(Origine, PointX1, PointZ1, BLUE);
 
                 this->triFaces.push_back(face);
             }
@@ -478,8 +478,7 @@ std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
                && distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
                 double dephasage = getWaveRadius()-distanceToOrigin;
 
-                basePoints[j].y += getWaveHeight()*cos((pi/getWaveWidth())*(distanceToOrigin-getWaveRadius()));
-                //basePoints[j].y += getWaveHeight()*cos((4*(distanceToOrigin-getWaveRadius()))*(distanceToOrigin-getWaveRadius()));
+                basePoints[j].y += getWaveHeight()*cos((2*pi/getWaveWidth())*(distanceToOrigin-getWaveRadius())+getWaveWidth()/2);
 
             }
         }

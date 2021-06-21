@@ -283,12 +283,12 @@ int main(int argc, char* args[])
 
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(60, 60);
-        CircularWave *pCircular1 = new CircularWave(Point(30,0,30),6,5,4,1,0);
-//        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
-//        ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
+        CircularWave *pCircular1 = new CircularWave(Point(0,0,30),6,10,4,1,0);
+        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
+        ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
         pMaillage->addWave(pCircular1);
-//        pMaillage->addWave(pConic1);
-//        pMaillage->addWave(pConic2);
+        pMaillage->addWave(pConic1);
+        pMaillage->addWave(pConic2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
 
