@@ -468,6 +468,7 @@ void CircularWave::updateWave(double delta_t) {
 std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
 
         Point origin = getWaveOrigin();
+        double pi = 3.1415;
 
         for(int j = 0; j < basePoints.size(); j++) {
             //Searching points before and after the radius (+ and - width)
@@ -475,7 +476,11 @@ std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
 
             if(distanceToOrigin >= getWaveRadius()-getWaveWidth()/2
                && distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
-                basePoints[j].y += getWaveHeight();
+                double dephasage = getWaveRadius()-distanceToOrigin;
+
+                basePoints[j].y += getWaveHeight()*cos((pi/getWaveWidth())*(distanceToOrigin-getWaveRadius()));
+                //basePoints[j].y += getWaveHeight()*cos((4*(distanceToOrigin-getWaveRadius()))*(distanceToOrigin-getWaveRadius()));
+
             }
         }
 

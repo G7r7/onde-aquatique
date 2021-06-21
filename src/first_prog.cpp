@@ -263,7 +263,7 @@ int main(int argc, char* args[])
         // Camera position
        double xcam = 0;
         double ycam = 0;
-        double zcam = 50;
+        double zcam = 80;
 
         float vitesse = 0.1f; // vitesse de deplacement de la camera
 
@@ -282,13 +282,13 @@ int main(int argc, char* args[])
         }
 
         Maillage *pMaillage = NULL;
-        pMaillage = new Maillage(30, 30);
-        CircularWave *pCircular1 = new CircularWave(Point(5,0,5),2,2,4,1,0);
-        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
-        ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
+        pMaillage = new Maillage(60, 60);
+        CircularWave *pCircular1 = new CircularWave(Point(30,0,30),6,5,4,1,0);
+//        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
+//        ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
         pMaillage->addWave(pCircular1);
-        pMaillage->addWave(pConic1);
-        pMaillage->addWave(pConic2);
+//        pMaillage->addWave(pConic1);
+//        pMaillage->addWave(pConic2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
 
 
@@ -351,7 +351,7 @@ int main(int argc, char* args[])
                     case SDLK_r:
                         ycam = 0;
                         xcam = 0;
-                        zcam = 5;
+                        zcam = 100;
                         rho = -45;
                         break;
 
