@@ -475,6 +475,7 @@ std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
 
         Point origin = getWaveOrigin();
         double pi = 3.1415;
+        double coeffAmortissement = -0.1;
 
         for(int j = 0; j < basePoints.size(); j++) {
             //Searching points before and after the radius (+ and - width)
@@ -483,8 +484,7 @@ std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
             if(distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
                 double dephasage = getWaveRadius()-distanceToOrigin;
 
-                basePoints[j].y += getWaveHeight()*cos((pi/getWaveWidth())*(distanceToOrigin-getWaveRadius()));
-
+                basePoints[j].y += (getWaveHeight()*exp(coeffAmortissement*distanceToOrigin))*cos((pi/getWaveWidth())*(distanceToOrigin-getWaveRadius()));
             }
         }
 
