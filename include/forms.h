@@ -110,7 +110,7 @@ public:
     Point getWaveOrigin() {return waveOrigin;}
     void setWaveOrigin(Point p) {waveOrigin = p;}
     virtual std::vector<Point> deformGrid(std::vector<Point>) = 0;
-    virtual void updateWave(double delta_t) = 0;
+    virtual void updateWave(double delta_t, int nbPointsX, int nbPointsZ) = 0;
 };
 
 
@@ -132,7 +132,7 @@ public:
     void setWaveSpeed(Vector v) {waveSpeed = v;}
     void setWaveAcceleration(Vector v) {waveSpeed = v;}
     std::vector<Point> deformGrid(std::vector<Point>);
-    void updateWave(double delta_t);
+    void updateWave(double delta_t, int nbPointsX, int nbPointsZ);
 };
 
 class CircularWave : public Wave
@@ -157,7 +157,7 @@ public:
     void setWaveSpeed(GLfloat v) {waveSpeed = v;}
     void setWaveAcceleration(GLfloat a) {waveAcceleration = a;}
     std::vector<Point> deformGrid(std::vector<Point>);
-    void updateWave(double delta_t);
+    void updateWave(double delta_t, int nbPointsX, int nbPointsZ);
 };
 
 class Maillage : public Form
@@ -174,6 +174,8 @@ private:
     std::vector<Triangle> triFaces;
 public:
     Maillage(int nbPointsX, int nbPointsZ);
+    int getNbPointsX() {return nbPointsX;};
+    int getNbPointsZ() {return nbPointsZ;};
     void initControlPoints();
     void initSpheres();
     void initTriFaces();

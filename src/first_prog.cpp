@@ -261,9 +261,9 @@ int main(int argc, char* args[])
         SDL_Event event;
 
         // Camera position
-       double xcam = 0;
-        double ycam = 0;
-        double zcam = 150;
+        double xcam = 0;
+        double ycam = 10;
+        double zcam = 200;
 
         float vitesse = 0.1f; // vitesse de deplacement de la camera
 
@@ -286,7 +286,7 @@ int main(int argc, char* args[])
         CircularWave *pCircular1 = new CircularWave(Point(30,30,30),15,30,4,1.8,0);
         ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
         ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
-       pMaillage->addWave(pCircular1);
+        pMaillage->addWave(pCircular1);
         pMaillage->addWave(pConic1);
         pMaillage->addWave(pConic2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
