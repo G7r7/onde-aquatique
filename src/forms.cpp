@@ -250,7 +250,7 @@ Maillage::Maillage(int nbPointsX, int nbPointsZ)
     this->nbPointsZ = nbPointsZ;
 
     initControlPoints();
-    initSpheres();
+    //initSpheres();
     initTriFaces();
 }
 
@@ -340,6 +340,18 @@ void Maillage::initSpheres() {
 }
 
 void Maillage::initTriFaces() {
+    double moyenne_hauteur = 0;
+    Color couleur;
+    double ymax =12;
+    double ab = -1/ymax;//1/(2*ymax);
+    double bb =0;// 0.5;
+
+    double ag = 2/ymax;//1/ymax;
+    double bg= 1;//0;
+
+    double ar = 1/ymax;//-1/ymax;
+    double br= 0;
+    float maximum;
     this->triFaces.clear();
 
     //Upper triFaces
@@ -352,8 +364,53 @@ void Maillage::initTriFaces() {
                 Point PointX1 = pointsToRender[ligne*nbPointsX + colonne+1];
                 //Point Z
                 Point PointZ1 = pointsToRender[(ligne+1)*nbPointsX + colonne];
+
+                maximum = std::max(std::max(Origine.y,PointX1.y),PointZ1.y);
+
+                moyenne_hauteur = maximum;
+                moyenne_hauteur = (Origine.y+PointX1.y+PointZ1.y)/3;
+/*------------------------------------------------------------------------
+//                couleur.b= 1;
+//                couleur.r = ar*moyenne_hauteur+br;
+//                if (couleur.r> 1){
+//                        couleur.r=1;
+//                }
+//                else if (couleur.r<0){
+//                    couleur.r = 0;
+//                }
+//                couleur.g = ag*moyenne_hauteur+bg;
+//                if (couleur.g> 1){
+//                        couleur.g=1;
+//                }
+//                else if (couleur.g<0){
+//                    couleur.g = 0;
+//                }
+
+-----------------------------------------------------------------------------*/
+                //Bleu
+                couleur.b= ab*moyenne_hauteur+bb;
+                if (moyenne_hauteur > 0){
+                        couleur.b = 0;
+                }
+
+                //Rouge
+                couleur.r = ar*moyenne_hauteur+br;
+                if (moyenne_hauteur < 0){
+                    couleur.r = 0;
+                }
+
+                //Vert
+                if ( moyenne_hauteur > -ymax/2 && moyenne_hauteur <= 0){
+                    couleur.g = ag*moyenne_hauteur+bg;
+                }
+                else if (moyenne_hauteur > 0 && moyenne_hauteur < ymax/2){
+                    couleur.g = -ag*moyenne_hauteur+bg;
+                }
+                else {couleur.g = 0;}
+
+
                 //Triangle face
-                Triangle face = Triangle(Origine, PointX1, PointZ1, DODGERBLUE);
+                Triangle face = Triangle(Origine, PointX1, PointZ1, couleur);
 
                 this->triFaces.push_back(face);
             }
@@ -370,8 +427,52 @@ void Maillage::initTriFaces() {
                 Point PointX1 = pointsToRender[ligne*nbPointsX + colonne+1];
                 //Point Z
                 Point PointZ1 = pointsToRender[(ligne-1)*nbPointsX + colonne+1];
+
+               maximum = std::max(std::max(Origine.y,PointX1.y),PointZ1.y);
+
+                moyenne_hauteur = maximum;
+                moyenne_hauteur = (Origine.y+PointX1.y+PointZ1.y)/3;
+/*----------------------------------------------
+//                couleur.b= 1;
+//                couleur.r = ar*moyenne_hauteur+br;
+//                if (couleur.r> 1){
+//                        couleur.r=1;
+//                }
+//                else if (couleur.r<0){
+//                    couleur.r = 0;
+//                }
+//                couleur.g = ag*moyenne_hauteur+bg;
+//                if (couleur.g> 1){
+//                        couleur.g=1;
+//                }
+//                else if (couleur.g<0){
+//                    couleur.g = 0;
+//                }
+
+-----------------------------------------------------*/
+                //Bleu
+                couleur.b= ab*moyenne_hauteur+bb;
+                if (moyenne_hauteur > 0){
+                        couleur.b = 0;
+                }
+
+                //Rouge
+                couleur.r = ar*moyenne_hauteur+br;
+                if (moyenne_hauteur < 0){
+                    couleur.r = 0;
+                }
+
+                //Vert
+                if ( moyenne_hauteur > -ymax/2 && moyenne_hauteur <= 0){
+                    couleur.g = ag*moyenne_hauteur+bg;
+                }
+                else if (moyenne_hauteur > 0 && moyenne_hauteur < ymax/2){
+                    couleur.g = -ag*moyenne_hauteur+bg;
+                }
+                else {couleur.g = 0;}
+
                 //Triangle face
-                Triangle face = Triangle(Origine, PointX1, PointZ1, BLUE);
+                Triangle face = Triangle(Origine, PointX1, PointZ1, couleur);
 
                 this->triFaces.push_back(face);
             }
@@ -474,8 +575,7 @@ std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
             //Searching points before and after the radius (+ and - width)
             GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
 
-            if(distanceToOrigin >= getWaveRadius()-getWaveWidth()/2
-               && distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
+            if(distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
                 double dephasage = getWaveRadius()-distanceToOrigin;
 
                 basePoints[j].y += getWaveHeight()*cos((2*pi/getWaveWidth())*(distanceToOrigin-getWaveRadius())+getWaveWidth()/2);

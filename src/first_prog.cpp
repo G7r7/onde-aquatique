@@ -19,7 +19,7 @@ const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
 // Max number of forms : static allocation
-const int MAX_FORMS_NUMBER = 50000;
+const int MAX_FORMS_NUMBER = 60000;
 
 // Animation actualization delay (in ms) => 100 updates per second
 const Uint32 ANIM_DELAY = 10;
@@ -112,7 +112,7 @@ bool initGL()
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // Fix aspect ratio and depth clipping planes
-    gluPerspective(40.0, (GLdouble)SCREEN_WIDTH/SCREEN_HEIGHT, 1.0, 100.0);
+    gluPerspective(40.0, (GLdouble)SCREEN_WIDTH/SCREEN_HEIGHT, 1.0, 1000.0);
 
 
     // Initialize Modelview Matrix
@@ -263,7 +263,7 @@ int main(int argc, char* args[])
         // Camera position
        double xcam = 0;
         double ycam = 0;
-        double zcam = 80;
+        double zcam = 150;
 
         float vitesse = 0.1f; // vitesse de deplacement de la camera
 
@@ -282,11 +282,11 @@ int main(int argc, char* args[])
         }
 
         Maillage *pMaillage = NULL;
-        pMaillage = new Maillage(60, 60);
-        CircularWave *pCircular1 = new CircularWave(Point(0,0,30),6,10,4,1,0);
+        pMaillage = new Maillage(100, 100);
+        CircularWave *pCircular1 = new CircularWave(Point(30,30,30),15,30,4,1.8,0);
         ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
         ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
-        pMaillage->addWave(pCircular1);
+       pMaillage->addWave(pCircular1);
         pMaillage->addWave(pConic1);
         pMaillage->addWave(pConic2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
@@ -332,7 +332,7 @@ int main(int argc, char* args[])
                         zcam -= lz * vitesse;
                         break;
 
-                                        case SDLK_q:
+                    case SDLK_q:
                         rho += 5;
                         break;
 
@@ -351,7 +351,7 @@ int main(int argc, char* args[])
                     case SDLK_r:
                         ycam = 0;
                         xcam = 0;
-                        zcam = 100;
+                        zcam = 200;
                         rho = -45;
                         break;
 
