@@ -112,7 +112,7 @@ bool initGL()
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // Fix aspect ratio and depth clipping planes
-    gluPerspective(40.0, (GLdouble)SCREEN_WIDTH/SCREEN_HEIGHT, 1.0, 100.0);
+    gluPerspective(40.0, (GLdouble)SCREEN_WIDTH/SCREEN_HEIGHT, 1.0, 500.0);
 
 
     // Initialize Modelview Matrix
@@ -284,7 +284,7 @@ int main(int argc, char* args[])
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(60, 60);
         CircularWave *pCircular1 = new CircularWave(Point(0,0,30),6,10,4,1,0);
-        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
+        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(20,0,23.32),Vector(0,0,0));
         ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
         pMaillage->addWave(pCircular1);
         pMaillage->addWave(pConic1);
@@ -351,7 +351,7 @@ int main(int argc, char* args[])
                     case SDLK_r:
                         ycam = 0;
                         xcam = 0;
-                        zcam = 100;
+                        zcam = 200;
                         rho = -45;
                         break;
 

@@ -388,7 +388,7 @@ void Maillage::update(double delta_t)
 
         //Deforming basePoints with each wave
         mesPoints = waves[i]->deformGrid(mesPoints);
-        waves[i]->updateWave(delta_t);
+        waves[i]->updateWave(delta_t, nbPointsX, nbPointsZ);
     }
 
     this->setPointsToRender(mesPoints);
@@ -423,9 +423,15 @@ ConicWave::ConicWave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, V
     this->waveAcceleration = waveAcceleration;
 }
 
-void ConicWave::updateWave(double delta_t) {
+void ConicWave::updateWave(double delta_t, int nbPointsX, int nbPointsZ) {
     Point origin = getWaveOrigin();
     origin.translate(getWaveSpeed().integral(delta_t));
+    if(origin.x < 0 || origin.x > nbPointsX) {
+        waveSpeed.x = -waveSpeed.x;
+    }
+    if(origin.z < 0 || origin.z > nbPointsZ) {
+        waveSpeed.z = -waveSpeed.z;
+    }
     setWaveOrigin(origin);
 }
 
@@ -459,7 +465,7 @@ CircularWave::CircularWave(Point waveOrigin, GLfloat waveHeight, GLfloat waveWid
     this->waveAcceleration = waveAcceleration;
 }
 
-void CircularWave::updateWave(double delta_t) {
+void CircularWave::updateWave(double delta_t, int nbPointsX, int nbPointsZ) {
         GLfloat radius = getWaveRadius();
         radius += (getWaveSpeed()*delta_t);
         setWaveRadius(radius);
@@ -474,11 +480,10 @@ std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
             //Searching points before and after the radius (+ and - width)
             GLfloat distanceToOrigin = pow(pow(basePoints[j].x-origin.x,2) + pow(basePoints[j].z-origin.z,2),0.5);
 
-            if(distanceToOrigin >= getWaveRadius()-getWaveWidth()/2
-               && distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
+            if(distanceToOrigin <= getWaveRadius()+getWaveWidth()/2) {
                 double dephasage = getWaveRadius()-distanceToOrigin;
 
-                basePoints[j].y += getWaveHeight()*cos((2*pi/getWaveWidth())*(distanceToOrigin-getWaveRadius())+getWaveWidth()/2);
+                basePoints[j].y += getWaveHeight()*cos((pi/getWaveWidth())*(distanceToOrigin-getWaveRadius()));
 
             }
         }
