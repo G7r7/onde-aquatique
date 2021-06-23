@@ -424,13 +424,17 @@ ConicWave::ConicWave(Point waveOrigin, GLfloat waveHeight, GLfloat waveRadius, V
 }
 
 void ConicWave::updateWave(double delta_t, int nbPointsX, int nbPointsZ) {
+    double coeffAmortissement = 0.9;
+
     Point origin = getWaveOrigin();
     origin.translate(getWaveSpeed().integral(delta_t));
     if(origin.x < 0 || origin.x > nbPointsX) {
         waveSpeed.x = -waveSpeed.x;
+        this->waveHeight *= coeffAmortissement;
     }
     if(origin.z < 0 || origin.z > nbPointsZ) {
         waveSpeed.z = -waveSpeed.z;
+        this->waveHeight *= coeffAmortissement;
     }
     setWaveOrigin(origin);
 }

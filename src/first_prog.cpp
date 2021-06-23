@@ -284,7 +284,7 @@ int main(int argc, char* args[])
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(60, 60);
         CircularWave *pCircular1 = new CircularWave(Point(30,30,30),15,10,4,1.8,0);
-        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(20,0,23.32),Vector(0,0,0));
+        ConicWave *pConic1 = new ConicWave(Point(7,0,2),20,3,Vector(20,0,23.32),Vector(0,0,0));
         ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
         pMaillage->addWave(pCircular1);
         pMaillage->addWave(pConic1);
