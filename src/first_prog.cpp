@@ -284,7 +284,7 @@ int main(int argc, char* args[])
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(100, 100);
         CircularWave *pCircular1 = new CircularWave(Point(0,0,0),15,30,4,10,0);
-        ConicWave *pConic1 = new ConicWave(Point(7,0,2),30,10,Vector(30,0,30),Vector(0,0,0));
+        ConicWave *pConic1 = new ConicWave(Point(7,0,2),30,10,Vector(0,0,0),Vector(0,0,0));
         ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
         pMaillage->addWave(pCircular1);
         pMaillage->addWave(pConic1);
@@ -360,6 +360,22 @@ int main(int argc, char* args[])
                         xcam = 95;
                         zcam = 150;
                         rho = -14;
+                        break;
+
+                    case SDLK_o:
+                        pConic1->setWaveSpeed(Vector(pConic1->getWaveSpeed().x,0,pConic1->getWaveSpeed().z-1));
+                        break;
+
+                    case SDLK_l:
+                        pConic1->setWaveSpeed(Vector(pConic1->getWaveSpeed().x,0,pConic1->getWaveSpeed().z+1));
+                        break;
+
+                    case SDLK_k:
+                        pConic1->setWaveSpeed(Vector(pConic1->getWaveSpeed().x-1,0,pConic1->getWaveSpeed().z));
+                        break;
+
+                    case SDLK_m:
+                        pConic1->setWaveSpeed(Vector(pConic1->getWaveSpeed().x+1,0,pConic1->getWaveSpeed().z));
                         break;
 
                     default:
