@@ -159,7 +159,7 @@ Surface::Surface(GLfloat *points, int nbPointsX, int nbPointsZ)
     int degreZ = nbPointsZ;
 //
 //     influence parameter setting of each control point
-//     Les valeurs des noeuds doivent alterner au minimum tout les degrés fois
+//     Les valeurs des noeuds doivent alterner au minimum tout les degrï¿½s fois
     GLfloat *noeudsX = new GLfloat[nbNoeudsX];
     {
         int k = 0;
@@ -272,8 +272,8 @@ void Maillage::updateFormList(Form **form_list, unsigned short *number_of_forms)
 void Maillage::initControlPoints() {
     //Flat plane of control points
     {
-    for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
-        for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
+    for (int i =-(0.5*nbPointsZ) ; i < 0.5*nbPointsZ ; i++) { // On itï¿½re les lignes
+        for (int j = -(0.5*nbPointsX); j < 0.5*nbPointsX; j++) { // On itï¿½re les valeurs des lignes
             Point monPoint = Point(j, 0, i);
             basePoints.push_back(monPoint);
         }
@@ -284,8 +284,8 @@ void Maillage::initControlPoints() {
 
     // Null speed vectors
     {
-    for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
-        for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
+    for (int i = 0; i < nbPointsZ; i++) { // On itï¿½re les lignes
+        for (int j = 0; j < nbPointsX; j++) { // On itï¿½re les valeurs des lignes
             Vector monVecteur = Vector(0,0,0);
             speedVectors.push_back(monVecteur);
         }
@@ -294,8 +294,8 @@ void Maillage::initControlPoints() {
 
     // Null acceleration vectors
     {
-    for (int i = 0; i < nbPointsZ; i++) { // On itère les lignes
-        for (int j = 0; j < nbPointsX; j++) { // On itère les valeurs des lignes
+    for (int i = 0; i < nbPointsZ; i++) { // On itï¿½re les lignes
+        for (int j = 0; j < nbPointsX; j++) { // On itï¿½re les valeurs des lignes
             Vector monVecteur = Vector(0,0,0);
             accelerationVectors.push_back(monVecteur);
         }
@@ -325,8 +325,8 @@ void Maillage::initSpheres() {
     this->spheres.clear();
 
     //Creating a sphere for each control point
-    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
-        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itï¿½re les lignes
+        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itï¿½re les valeurs des lignes
             // Origine
             Point Origine = pointsToRender[ligne*nbPointsX + colonne];
 
@@ -355,9 +355,9 @@ void Maillage::initTriFaces() {
     this->triFaces.clear();
 
     //Upper triFaces
-    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
-        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
-            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface à partir du bord droit et bas
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itï¿½re les lignes
+        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itï¿½re les valeurs des lignes
+            if(colonne < nbPointsX-1 && ligne < nbPointsZ-1) { // On ne fait pas de surface ï¿½ partir du bord droit et bas
                 // Origine
                 Point Origine = pointsToRender[ligne*nbPointsX + colonne];
                 // Point X
@@ -418,9 +418,9 @@ void Maillage::initTriFaces() {
     }
 
     //Lower triFaces
-    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itère les lignes
-        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itère les valeurs des lignes
-            if(colonne < nbPointsX-1 && ligne != 0) { // On ne fait pas de surface à partir du bord haut et droit
+    for(int ligne = 0; ligne < nbPointsZ; ligne ++) { // On itï¿½re les lignes
+        for(int colonne = 0; colonne < nbPointsX; colonne++) { // On itï¿½re les valeurs des lignes
+            if(colonne < nbPointsX-1 && ligne != 0) { // On ne fait pas de surface ï¿½ partir du bord haut et droit
                 // Origine
                 Point Origine = pointsToRender[ligne*nbPointsX + colonne];
                 // Point X
@@ -529,11 +529,11 @@ void ConicWave::updateWave(double delta_t, int nbPointsX, int nbPointsZ) {
 
     Point origin = getWaveOrigin();
     origin.translate(getWaveSpeed().integral(delta_t));
-    if(origin.x < 0 || origin.x > nbPointsX) {
+    if(origin.x < -(0.5*nbPointsX) || origin.x > 0.5*nbPointsX) {
         waveSpeed.x = -waveSpeed.x;
         this->waveHeight *= coeffAmortissement;
     }
-    if(origin.z < 0 || origin.z > nbPointsZ) {
+    if(origin.z < -(0.5*nbPointsZ) || origin.z > 0.5*nbPointsZ) {
         waveSpeed.z = -waveSpeed.z;
         this->waveHeight *= coeffAmortissement;
     }
@@ -580,7 +580,7 @@ std::vector<Point> CircularWave::deformGrid(std::vector<Point> basePoints) {
 
         Point origin = getWaveOrigin();
         double pi = 3.1415;
-        double coeffAmortissement = -0.1;
+        double coeffAmortissement = -0.05;
 
         for(int j = 0; j < basePoints.size(); j++) {
             //Searching points before and after the radius (+ and - width)

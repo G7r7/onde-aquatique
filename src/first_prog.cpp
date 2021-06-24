@@ -127,7 +127,7 @@ bool initGL()
 
 
     // Lighting basic configuration and activation
-    const GLfloat light_ambient[]  = { 0.3f, 0.3f, 0.3f, 1.0f };
+    const GLfloat light_ambient[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
     const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
     const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
@@ -262,10 +262,10 @@ int main(int argc, char* args[])
 
         // Camera position
         double xcam = 0;
-        double ycam = 10;
-        double zcam = 200;
+        double ycam = -50;
+        double zcam = 300;
 
-        float vitesse = 0.1f; // vitesse de deplacement de la camera
+        float vitesse = 2; // vitesse de deplacement de la camera
 
         // vecteur repr�sentant la direction de la camera
         float lx=0.0f,lz=-1.0f;
@@ -283,8 +283,8 @@ int main(int argc, char* args[])
 
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(100, 100);
-        CircularWave *pCircular1 = new CircularWave(Point(30,30,30),15,30,4,1.8,0);
-        ConicWave *pConic1 = new ConicWave(Point(7,0,2),10,3,Vector(1,0,1),Vector(0,0,0));
+        CircularWave *pCircular1 = new CircularWave(Point(0,0,0),15,30,4,10,0);
+        ConicWave *pConic1 = new ConicWave(Point(7,0,2),30,10,Vector(30,0,30),Vector(0,0,0));
         ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
         pMaillage->addWave(pCircular1);
         pMaillage->addWave(pConic1);
@@ -341,18 +341,25 @@ int main(int argc, char* args[])
                         break;
 
                     case SDLK_z:
-                        ycam += 0.5;
+                        ycam += 2;
                         break;
 
                     case SDLK_s:
-                        ycam -= 0.5;
+                        ycam -= 2;
                         break;
 
                     case SDLK_r:
-                        ycam = 0;
+                        ycam = -50;
                         xcam = 0;
-                        zcam = 200;
+                        zcam = 300;
                         rho = -45;
+                        break;
+
+                    case SDLK_f:
+                        ycam = -105;
+                        xcam = 95;
+                        zcam = 150;
+                        rho = -14;
                         break;
 
                     default:
