@@ -387,7 +387,9 @@ int main(int argc, char* args[])
                     case SDLK_m:
                         pConic1->setWaveSpeed(Vector(pConic1->getWaveSpeed().x+1,0,pConic1->getWaveSpeed().z));
                         break;
-
+                    case SDLK_SPACE:
+                          pConic1->setWaveSpeed(Vector(0,0,0));
+                        break;
                     default:
                         break;
                     }
