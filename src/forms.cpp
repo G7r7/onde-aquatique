@@ -252,6 +252,7 @@ Maillage::Maillage(int nbPointsX, int nbPointsZ)
     initControlPoints();
     //initSpheres();
     initTriFaces();
+    this->colorType = false;
 }
 
 void Maillage::updateFormList(Form **form_list, unsigned short *number_of_forms) {
@@ -369,44 +370,49 @@ void Maillage::initTriFaces() {
 
                 moyenne_hauteur = maximum;
                 moyenne_hauteur = (Origine.y+PointX1.y+PointZ1.y)/3;
-/*------------------------------------------------------------------------
-//                couleur.b= 1;
-//                couleur.r = ar*moyenne_hauteur+br;
-//                if (couleur.r> 1){
-//                        couleur.r=1;
-//                }
-//                else if (couleur.r<0){
-//                    couleur.r = 0;
-//                }
-//                couleur.g = ag*moyenne_hauteur+bg;
-//                if (couleur.g> 1){
-//                        couleur.g=1;
-//                }
-//                else if (couleur.g<0){
-//                    couleur.g = 0;
-//                }
 
------------------------------------------------------------------------------*/
-                //Bleu
-                couleur.b= ab*moyenne_hauteur+bb;
-                if (moyenne_hauteur > 0){
-                        couleur.b = 0;
-                }
+                if (colorType == 0){
 
-                //Rouge
-                couleur.r = ar*moyenne_hauteur+br;
-                if (moyenne_hauteur < 0){
-                    couleur.r = 0;
+                    couleur.b= 1;
+                    couleur.r = (-1/ymax)*moyenne_hauteur;
+                    if (couleur.r> 1){
+                            couleur.r=1;
+                    }
+                    else if (couleur.r<0){
+                        couleur.r = 0;
+                    }
+                    couleur.g = (1/ymax)*moyenne_hauteur;
+                    if (couleur.g> 1){
+                            couleur.g=1;
+                    }
+                    else if (couleur.g<0){
+                        couleur.g = 0;
+                    }
                 }
+                else{
 
-                //Vert
-                if ( moyenne_hauteur > -ymax/2 && moyenne_hauteur <= 0){
-                    couleur.g = ag*moyenne_hauteur+bg;
+                    //Bleu
+                    couleur.b= (-1/ymax)*moyenne_hauteur;
+                    if (moyenne_hauteur > 0){
+                            couleur.b = 0;
+                    }
+
+                    //Rouge
+                    couleur.r = (1/ymax)*moyenne_hauteur;
+                    if (moyenne_hauteur < 0){
+                        couleur.r = 0;
+                    }
+
+                    //Vert
+                    if ( moyenne_hauteur > -ymax/2 && moyenne_hauteur <= 0){
+                        couleur.g = (2/ymax)*moyenne_hauteur+1;
+                    }
+                    else if (moyenne_hauteur > 0 && moyenne_hauteur < ymax/2){
+                        couleur.g = (-2/ymax)*moyenne_hauteur+1;
+                    }
+                    else {couleur.g = 0;}
+
                 }
-                else if (moyenne_hauteur > 0 && moyenne_hauteur < ymax/2){
-                    couleur.g = -ag*moyenne_hauteur+bg;
-                }
-                else {couleur.g = 0;}
 
 
                 //Triangle face
@@ -432,44 +438,48 @@ void Maillage::initTriFaces() {
 
                 moyenne_hauteur = maximum;
                 moyenne_hauteur = (Origine.y+PointX1.y+PointZ1.y)/3;
-/*----------------------------------------------
-//                couleur.b= 1;
-//                couleur.r = ar*moyenne_hauteur+br;
-//                if (couleur.r> 1){
-//                        couleur.r=1;
-//                }
-//                else if (couleur.r<0){
-//                    couleur.r = 0;
-//                }
-//                couleur.g = ag*moyenne_hauteur+bg;
-//                if (couleur.g> 1){
-//                        couleur.g=1;
-//                }
-//                else if (couleur.g<0){
-//                    couleur.g = 0;
-//                }
+if (colorType == 0){
 
------------------------------------------------------*/
-                //Bleu
-                couleur.b= ab*moyenne_hauteur+bb;
-                if (moyenne_hauteur > 0){
-                        couleur.b = 0;
+                    couleur.b= 1;
+                    couleur.r = (-1/ymax)*moyenne_hauteur;
+                    if (couleur.r> 1){
+                            couleur.r=1;
+                    }
+                    else if (couleur.r<0){
+                        couleur.r = 0;
+                    }
+                    couleur.g = (1/ymax)*moyenne_hauteur;
+                    if (couleur.g> 1){
+                            couleur.g=1;
+                    }
+                    else if (couleur.g<0){
+                        couleur.g = 0;
+                    }
                 }
+                else{
 
-                //Rouge
-                couleur.r = ar*moyenne_hauteur+br;
-                if (moyenne_hauteur < 0){
-                    couleur.r = 0;
-                }
+                    //Bleu
+                    couleur.b= (-1/ymax)*moyenne_hauteur;
+                    if (moyenne_hauteur > 0){
+                            couleur.b = 0;
+                    }
 
-                //Vert
-                if ( moyenne_hauteur > -ymax/2 && moyenne_hauteur <= 0){
-                    couleur.g = ag*moyenne_hauteur+bg;
+                    //Rouge
+                    couleur.r = (1/ymax)*moyenne_hauteur;
+                    if (moyenne_hauteur < 0){
+                        couleur.r = 0;
+                    }
+
+                    //Vert
+                    if ( moyenne_hauteur > -ymax/2 && moyenne_hauteur <= 0){
+                        couleur.g = (2/ymax)*moyenne_hauteur+1;
+                    }
+                    else if (moyenne_hauteur > 0 && moyenne_hauteur < ymax/2){
+                        couleur.g = (-2/ymax)*moyenne_hauteur+1;
+                    }
+                    else {couleur.g = 0;}
+
                 }
-                else if (moyenne_hauteur > 0 && moyenne_hauteur < ymax/2){
-                    couleur.g = -ag*moyenne_hauteur+bg;
-                }
-                else {couleur.g = 0;}
 
                 //Triangle face
                 Triangle face = Triangle(Origine, PointX1, PointZ1, couleur);

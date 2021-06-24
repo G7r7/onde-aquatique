@@ -390,7 +390,14 @@ int main(int argc, char* args[])
                     case SDLK_SPACE:
                           pConic1->setWaveSpeed(Vector(0,0,0));
                         break;
+                    case SDLK_c:
+                          pMaillage->setColorType(false);
+                        break;
+                    case SDLK_v:
+                          pMaillage->setColorType(true);
+                        break;
                     default:
+
                         break;
                     }
                     break;

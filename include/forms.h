@@ -172,6 +172,7 @@ private:
     int nbPointsZ;
     std::vector<Sphere> spheres;
     std::vector<Triangle> triFaces;
+    bool colorType;
 public:
     Maillage(int nbPointsX, int nbPointsZ);
     int getNbPointsX() {return nbPointsX;};
@@ -189,6 +190,7 @@ public:
     void updateFormList(Form **form_list, unsigned short *number_of_forms);
     void update(double delta_t);
     void render();
+    void setColorType ( bool choice) {colorType = choice;};
 };
 
 
