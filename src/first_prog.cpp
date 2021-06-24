@@ -176,7 +176,7 @@ void update(Form* formlist[MAX_FORMS_NUMBER], double delta_t)
     }
 }
 
-void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos, double deg)
+void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos, double rho, double theta)
 {
     // Clear color buffer and Z-Buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -190,8 +190,8 @@ void render(Form* formlist[MAX_FORMS_NUMBER], const Point &cam_pos, double deg)
                     0, 0, 0,
 			0.0f, 1.0f,  0.0f);
     // Isometric view
-    glRotated(deg, 0, 1, 0);
-    glRotated(30, 1, 0, -1);
+    glRotated(rho, 0, 1, 0);
+    glRotated(theta, 1, 0, -1);
 
     // X, Y and Z axis
     glPushMatrix(); // Preserve the camera viewing point for further forms
@@ -262,15 +262,16 @@ int main(int argc, char* args[])
 
         // Camera position
         double xcam = 0;
-        double ycam = -50;
-        double zcam = 300;
+        double ycam = 50;
+        double zcam = 150;
 
         float vitesse = 2; // vitesse de deplacement de la camera
 
         // vecteur repr�sentant la direction de la camera
         float lx=0.0f,lz=-1.0f;
 
-        double rho = -45;
+        double rho = 0;
+        double theta = 0;
         Point camera_position(0, 0, 5.0);
 
         // The forms to render
@@ -340,6 +341,14 @@ int main(int argc, char* args[])
                         rho -= 5;
                         break;
 
+                    case SDLK_a:
+                        theta += 5;
+                        break;
+
+                    case SDLK_e:
+                        theta -= 5;
+                        break;
+
                     case SDLK_z:
                         ycam += 2;
                         break;
@@ -349,17 +358,18 @@ int main(int argc, char* args[])
                         break;
 
                     case SDLK_r:
-                        ycam = -50;
+                        ycam = 50;
                         xcam = 0;
-                        zcam = 300;
-                        rho = -45;
+                        zcam = 150;
+                        rho = 0;
+                        theta=0;
                         break;
 
                     case SDLK_f:
-                        ycam = -105;
-                        xcam = 95;
+                        ycam = 0;
+                        xcam = 0;
                         zcam = 150;
-                        rho = -14;
+                        rho = 0;
                         break;
 
                     case SDLK_o:
@@ -399,7 +409,7 @@ int main(int argc, char* args[])
 
             // Render the scene
             camera_position = Point(xcam, ycam, zcam);
-            render(forms_list, camera_position, rho);
+            render(forms_list, camera_position, rho, theta);
 
 
             // Update window screen
