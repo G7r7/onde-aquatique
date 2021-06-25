@@ -284,10 +284,13 @@ int main(int argc, char* args[])
 
         Maillage *pMaillage = NULL;
         pMaillage = new Maillage(100, 100);
-        CircularWave *pCircular1 = new CircularWave(Point(0,0,0),15,30,4,10,0);
-        ConicWave *pConic1 = new ConicWave(Point(7,0,2),30,10,Vector(0,0,0),Vector(0,0,0));
-        ConicWave *pConic2 = new ConicWave(Point(15,0,5),5,3,Vector(-1,0,1),Vector(0,0,0));
+
+        ConicWave *pConic1 = new ConicWave(Point(7,0,2),0,10,Vector(0,0,0),Vector(0,0,0));
+        ConicWave *pConic2 = new ConicWave(Point(15,0,5),0,3,Vector(-1,0,1),Vector(0,0,0));
+        CircularWave *pCircular1 = new CircularWave(Point(0,0,0),0,30,4,10,0);
+        CircularWave *pCircular2 = new CircularWave(Point(0,0,0),0,30,4,10,0);
         pMaillage->addWave(pCircular1);
+        pMaillage->addWave(pCircular2);
         pMaillage->addWave(pConic1);
         pMaillage->addWave(pConic2);
         pMaillage->updateFormList(forms_list, &number_of_forms);
@@ -322,6 +325,130 @@ int main(int argc, char* args[])
                     case SDLK_ESCAPE:
                         quit = true;
                         break;
+
+                    case SDLK_1:
+                        pConic1->setWaveOrigin(Point(0,0,0));
+                        pConic1->setWaveHeight(15);
+                        pConic1->setWaveSpeed(Vector(0,0,0));
+
+                        pConic2->setWaveOrigin(Point(0,0,0));
+                        pConic2->setWaveHeight(0);
+                        pConic2->setWaveSpeed(Vector(0,0,0));
+
+                        pCircular1->setWaveOrigin(Point(0,0,0));
+                        pCircular1->setWaveHeight(0);
+                        pCircular1->setWaveSpeed(0);
+
+                        pCircular2->setWaveOrigin(Point(0,0,0));
+                        pCircular2->setWaveHeight(0);
+                        pCircular2->setWaveSpeed(0);
+                        break;
+
+                    case SDLK_2:
+                        pConic1->setWaveOrigin(Point(-20,0,-20));
+                        pConic1->setWaveHeight(15);
+                        pConic1->setWaveSpeed(Vector(5,0,5));
+
+                        pConic2->setWaveOrigin(Point(20,0,-20));
+                        pConic2->setWaveHeight(10);
+                        pConic2->setWaveSpeed(Vector(-5,0,5));
+
+                        pCircular1->setWaveOrigin(Point(0,0,0));
+                        pCircular1->setWaveHeight(0);
+                        pCircular1->setWaveSpeed(0);
+
+                        pCircular2->setWaveOrigin(Point(0,0,0));
+                        pCircular2->setWaveHeight(0);
+                        pCircular2->setWaveSpeed(0);
+                        break;
+
+                    case SDLK_3:
+                        pConic1->setWaveOrigin(Point(-20,0,-20));
+                        pConic1->setWaveHeight(0);
+                        pConic1->setWaveSpeed(Vector(5,0,5));
+
+                        pConic2->setWaveOrigin(Point(20,0,-20));
+                        pConic2->setWaveHeight(0);
+                        pConic2->setWaveSpeed(Vector(-5,0,5));
+
+                        pCircular1->setWaveOrigin(Point(0,0,0));
+                        pCircular1->setWaveHeight(20);
+                        pCircular1->setWaveWidth(20);
+                        pCircular1->setWaveSpeed(10);
+                        pCircular1->setWaveRadius(0);
+
+                        pCircular2->setWaveOrigin(Point(0,0,0));
+                        pCircular2->setWaveHeight(0);
+                        pCircular2->setWaveSpeed(0);
+                        pCircular2->setWaveRadius(0);
+                        break;
+
+
+                    case SDLK_4:
+                        pConic1->setWaveOrigin(Point(-20,0,-20));
+                        pConic1->setWaveHeight(0);
+                        pConic1->setWaveSpeed(Vector(5,0,5));
+
+                        pConic2->setWaveOrigin(Point(20,0,-20));
+                        pConic2->setWaveHeight(0);
+                        pConic2->setWaveSpeed(Vector(-5,0,5));
+
+                        pCircular1->setWaveOrigin(Point(0,0,0));
+                        pCircular1->setWaveHeight(25);
+                        pCircular1->setWaveWidth(4);
+                        pCircular1->setWaveSpeed(10);
+                        pCircular1->setWaveRadius(0);
+
+                        pCircular2->setWaveOrigin(Point(0,0,0));
+                        pCircular2->setWaveHeight(0);
+                        pCircular2->setWaveSpeed(0);
+                        pCircular2->setWaveRadius(0);
+                        break;
+
+                    case SDLK_5:
+                        pConic1->setWaveOrigin(Point(-20,0,-20));
+                        pConic1->setWaveHeight(0);
+                        pConic1->setWaveSpeed(Vector(5,0,5));
+
+                        pConic2->setWaveOrigin(Point(20,0,-20));
+                        pConic2->setWaveHeight(0);
+                        pConic2->setWaveSpeed(Vector(-5,0,5));
+
+                        pCircular1->setWaveOrigin(Point(-15,0,0));
+                        pCircular1->setWaveHeight(15);
+                        pCircular1->setWaveSpeed(20);
+                        pCircular1->setWaveWidth(5);
+                        pCircular1->setWaveRadius(0);
+
+                        pCircular2->setWaveOrigin(Point(15,0,0));
+                        pCircular2->setWaveHeight(15);
+                        pCircular2->setWaveSpeed(20);
+                        pCircular2->setWaveWidth(5);
+                        pCircular2->setWaveRadius(0);
+                        break;
+
+                    case SDLK_6:
+                        pConic1->setWaveOrigin(Point(-20,0,-20));
+                        pConic1->setWaveHeight(20);
+                        pConic1->setWaveSpeed(Vector(9,0,4));
+
+                        pConic2->setWaveOrigin(Point(20,0,-20));
+                        pConic2->setWaveHeight(10);
+                        pConic2->setWaveSpeed(Vector(-7,0,8));
+
+                        pCircular1->setWaveOrigin(Point(-15,0,0));
+                        pCircular1->setWaveHeight(5);
+                        pCircular1->setWaveSpeed(20);
+                        pCircular1->setWaveWidth(6);
+                        pCircular1->setWaveRadius(0);
+
+                        pCircular2->setWaveOrigin(Point(15,0,0));
+                        pCircular2->setWaveHeight(4);
+                        pCircular2->setWaveSpeed(20);
+                        pCircular2->setWaveWidth(8);
+                        pCircular2->setWaveRadius(0);
+                        break;
+
 
                     case SDLK_UP :
                         xcam += lx * vitesse;
@@ -370,6 +497,14 @@ int main(int argc, char* args[])
                         xcam = 0;
                         zcam = 150;
                         rho = 0;
+                        break;
+
+                    case SDLK_t:
+                        ycam = 150;
+                        xcam = 2;
+                        zcam = 0;
+                        rho = 90;
+                        theta = 0;
                         break;
 
                     case SDLK_o:
